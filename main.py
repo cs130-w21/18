@@ -1,5 +1,5 @@
 from flask import Flask
-from mood import mood_api
+from backend.mood import mood_api
 
 app = Flask(__name__)
 app.register_blueprint(mood_api)

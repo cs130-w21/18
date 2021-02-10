@@ -3,7 +3,7 @@ jobs:
   include:
   - python: '3.8'
     install: pip install -r requirements.txt
-    before_script: gunicorn app:app &
+    before_script: gunicorn main:app &
     script: pytest
 deploy:
   - provider: heroku
