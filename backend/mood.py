@@ -1,5 +1,4 @@
 from flask import Blueprint, request, abort, jsonify, Response
-# TODO: add marshmallow to requirements file
 from marshmallow import Schema, fields, validate, exceptions
 import copy
 import json
