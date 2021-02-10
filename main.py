@@ -2,7 +2,7 @@ from flask import Flask
 from backend.mood import mood_api
 
 app = Flask(__name__)
-app.register_blueprint(mood_api)
+app.register_blueprint(mood_api, url_prefix='/api/v1/mood')
 
 @app.route("/")
 def hello():

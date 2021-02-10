@@ -25,7 +25,7 @@ class CreateUpdateMood(Schema):
 	energy = fields.List(fields.Number(), required=False, validate=validate.Length(equal=3))
 
 # Create OR update mood (PUT request)
-@mood_api.route("/api/v1/mood/<user>/mood", methods=['PUT'])
+@mood_api.route("/<user>/mood", methods=['PUT'])
 def create_update_custom_mood(user):
 	if not request.data or not request.args:
 		abort(400, description="Malformed syntax")
@@ -49,7 +49,7 @@ def create_update_custom_mood(user):
 	return jsonify(data)
 
 # Delete mood (DELETE request)
-@mood_api.route("/api/v1/mood/<user>/mood", methods=['DELETE'])
+@mood_api.route("/<user>/mood", methods=['DELETE'])
 def delete_custom_mood(user):
 	if not request.args:
 		abort(400, description="Malformed syntax")
@@ -67,7 +67,7 @@ def delete_custom_mood(user):
 	return Response(status = 200)
 
 # Read mood (GET request)
-@mood_api.route("/api/v1/mood/<user>/mood", methods=['GET'])
+@mood_api.route("/<user>/mood", methods=['GET'])
 def get_custom_mood(user):
 	if not request.args:
 		abort(400, description="Malformed syntax")
