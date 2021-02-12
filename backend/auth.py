@@ -3,6 +3,8 @@ from flask import Blueprint, request, abort, Response, jsonify
 import json
 import os
 import base64
+from .utils.jwt import JWT
+from datetime import datetime, timedelta
 
 auth_api = Blueprint('auth_api', __name__)
 SPOTIFY_URL = 'https://accounts.spotify.com/api/token'
@@ -22,12 +24,22 @@ def get_access_token():
         'redirect_uri': REDIRECT_URI
     }
     headers = create_headers_for_spotify_auth()
-    resp = requests.post(url, data=data, headers=headers)
+    resp = requests.post(SPOTIFY_URL, data=data, headers=headers)
     if resp.status_code == 200:
-        return jsonify(resp.json())
+        jwt = create_jwt(resp)
+        return jsonify({'jwt':jwt})
     else:
         print(resp.text)
         abort(500, "Error in retreiving access token")
+
+def create_jwt(spotify_resp):
+    spotify_json = spotify_resp.json()
+    expiration = datetime.utcnow() + timedelta(seconds=spotify_json['expires_in'] - 120)
+    payload = {
+            'access_token': spotify_json['access_token'],
+            'expires_at': datetime.timestamp(expiration)
+            }
+    return JWT.encode(payload)
 
 def create_headers_for_spotify_auth():
     client_id = os.environ['CLIENT_ID']
