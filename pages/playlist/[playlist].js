@@ -1,12 +1,10 @@
 import React from "react";
-import Link from 'next/link';
+import Playlist from "../../views/playlist";
 
-const Playlist = (props) => {
+const PlaylistController = (props) => {
   return (
-    <div>
-      <p>Here's your custom playlist!</p>
-    </div>
+    <Playlist/>
   );
 };
 
-export default Playlist;
+export default PlaylistController;
