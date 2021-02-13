@@ -1,5 +1,5 @@
 import requests
-from flask import Blueprint, request, abort, Response, jsonify
+from flask import Blueprint, request, abort, Response, jsonify, url_for, redirect
 import json
 import os
 import base64
@@ -17,6 +17,7 @@ def get_access_token():
     if not request.args:
         print("No args provided")
         abort(400, description="Malformed syntax")
+    #send code to Spotify
     code = request.args.get('code')
     data = {
         'code': code, 
@@ -25,19 +26,42 @@ def get_access_token():
     }
     headers = create_headers_for_spotify_auth()
     resp = requests.post(SPOTIFY_URL, data=data, headers=headers)
-    if resp.status_code == 200:
-        jwt = create_jwt(resp)
-        return jsonify({'jwt':jwt})
-    else:
+    #get data from Spotify response
+    if resp.status_code != 200:
         print(resp.text)
         abort(500, "Error in retreiving access token")
+    resp_json = resp.json()
+    access_token = resp_json['access_token']
+    refresh_token = resp_json['refresh_token']
+    expires_in = resp_json['expires_in']
+    #get user info from Spotify
+    headers = {
+            'Authorization': f"Bearer {access_token}",
+            #'Accept': 'application/json',
+            #'Content Type': 'application/json'
+            }
+    resp = requests.get('https://api.spotify.com/v1/me', headers=headers)
+    #prepare jwt
+    if resp.status_code != 200:
+        print(resp.text)
+        abort(500, "Error in retrieving user name")
+    resp_json = resp.json()
+    display_name = resp_json['display_name']
+    uri = resp_json['uri']
+    user_id = uri.split(':')[2]
+    jwt = create_jwt(access_token, user_id, expires_in)
+    #save refresh token TODO: persist in DB
+    refresh_token_cache[user_id] = refresh_token
+    redirect_uri = f"https://test-fe-130.herokuapp.com/?username={display_name},userid={user_id},jwt={jwt}"
+    return redirect(redirect_uri)
+        
 
-def create_jwt(spotify_resp):
-    spotify_json = spotify_resp.json()
-    expiration = datetime.utcnow() + timedelta(seconds=spotify_json['expires_in'] - 120)
+def create_jwt(access_token, user_id, expires_in):
+    expiration = datetime.utcnow() + timedelta(seconds=expires_in - 120)
     payload = {
-            'access_token': spotify_json['access_token'],
-            'expires_at': datetime.timestamp(expiration)
+            'access_token': access_token,
+            'expires_at': datetime.timestamp(expiration),
+            'user_id': user_id
             }
     return JWT.encode(payload)
 
@@ -48,4 +72,3 @@ def create_headers_for_spotify_auth():
     encoded = base64.b64encode(encoded).decode('ascii')
     headers = {'Authorization': f"Basic {encoded}"}
     return headers
-
