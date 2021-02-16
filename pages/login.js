@@ -1,22 +1,16 @@
 import React from "react";
-import Link from 'next/link';
-import "../styles/Login.module.css";
+import LoginPage from "../views/login";
 
-const LoginPage = (props) => {
+const LoginPageController = (props) => {
   if (props.loggedIn) {
     return <Redirect to="/" />;
   }
 
   return (
-    <div>
-      <p>Hello!</p>
-      <Link href="/questionnaire">
-        <button type="button" className="btn btn-primary">
-          Log in!
-        </button>
-      </Link>
-    </div>
+    <LoginPage
+      loginUrl={'/questionnaire'}
+    />
   );
 };
 
-export default LoginPage;
+export default LoginPageController;
