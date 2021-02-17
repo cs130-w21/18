@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import Link from 'next/link';
-import "../styles/Login.module.css";
 
-const LoginPage = (props) => {
+const LoginPageController = (props) => {
   if (props.loggedIn) {
     return <Redirect to="/" />;
   } else {
@@ -24,4 +22,4 @@ const LoginPage = (props) => {
 
 };
 
-export default LoginPage;
+export default LoginPageController;

@@ -1,44 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Button, Form } from 'react-bootstrap';
+import { useRouter } from "next/router";
+import Questionnaire from "../views/questionnaire";
+import { submitQuestionnaire } from "../lib/fetch";
 
-const Questionnaire = (props) => {
-  const [responses, setResponses] = useState({
-      energy: 5
-  });
-
+const QuestionnaireController = (props) => {
   const router = useRouter();
 
-  const submitResponses = () => {
+  const submitResponses = (responses) => {
     console.log(responses);
-    // make API call to submit responses
+    submitQuestionnaire();
 
     router.push('/playlist/2');
   };
 
+  const defaultSettings = {
+    energy: 5
+  };
+
   return (
-    <>
-      <div>
-        <p>Tell us what kind of music you're in the mood for!</p>
-      </div>
-      <Form>
-        <Form.Group controlId="formEnergyRange">
-          <Form.Label>Energy</Form.Label>
-          <Form.Control
-            type="range"
-            className="form-range"
-            min="0"
-            max="10"
-            step="1"
-            defaultValue="5"
-            onChange={(e) => setResponses({ energy: e.target.value })}
-          />
-        </Form.Group>
-      </Form>
-      <Button onClick={submitResponses}>Get my playlist!</Button>
-    </>
+    <Questionnaire
+      defaultSettings={defaultSettings}
+      submitResponses={submitResponses}
+    />
   );
 };
 
-export default Questionnaire;
+export default QuestionnaireController;

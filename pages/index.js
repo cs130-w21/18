@@ -1,38 +1,17 @@
-import Head from 'next/head'
-import React from 'react';
-import Link from 'next/link';
-import { Button } from 'react-bootstrap';
+import React from "react";
+import Home from "../views/home";
+import { fetchHomePageData } from "../lib/fetch";
 
-export default function Home() {
-
+export default function HomeController() {
   return (
-    <div>
-      {/* Todo: Pull this out into its own component so we can reuse it */}
-      <Head>
-        <title>Custom Mood-Based Playlists</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      {/* Todo: automatically redirect user if they're not logged in. */}
-      <Link href='/login'>
-        <Button>Log in</Button>
-      </Link>
-
-      <p>Hello!</p>
-      <Link href="/questionnaire">
-        <Button>
-          Generate your playlist!
-        </Button>
-      </Link>
-    </div>
+    <Home
+      questionnaireUrl={'/questionnaire'}
+    />
   );
 };
 
 export async function getServerSideProps(context) {
-  // Fetch any user data from the backend
-  // const res = await fetch(`https://.../data`)
-  // const data = await res.json()
-
+  const data = await fetchHomePageData();
   // Pass data to the page via props
-  return { props: { data: '' } }
+  return { props: { data } }
 }
