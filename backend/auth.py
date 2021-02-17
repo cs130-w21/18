@@ -5,10 +5,10 @@ import os
 import base64
 from .utils.jwt import JWT
 from datetime import datetime, timedelta
+from .utils.constants import Scopes
 
 auth_api = Blueprint('auth_api', __name__)
 SPOTIFY_URL = 'https://accounts.spotify.com/api/token'
-REDIRECT_URI = 'https://musaic-13018.herokuapp.com/login/callback'
 GRANT_TYPE = 'authorization_code'
 refresh_token_cache = {}
 
@@ -22,7 +22,7 @@ def get_access_token():
     data = {
         'code': code, 
         'grant_type': GRANT_TYPE, 
-        'redirect_uri': REDIRECT_URI
+        'redirect_uri': os.environ['SPOTIFY_REDIRECT_URI']
     }
     headers = create_headers_for_spotify_auth()
     resp = requests.post(SPOTIFY_URL, data=data, headers=headers)
@@ -36,9 +36,7 @@ def get_access_token():
     expires_in = resp_json['expires_in']
     #get user info from Spotify
     headers = {
-            'Authorization': f"Bearer {access_token}",
-            #'Accept': 'application/json',
-            #'Content Type': 'application/json'
+            'Authorization': f"Bearer {access_token}"
             }
     resp = requests.get('https://api.spotify.com/v1/me', headers=headers)
     #prepare jwt
@@ -52,8 +50,20 @@ def get_access_token():
     jwt = create_jwt(access_token, user_id, expires_in)
     #save refresh token TODO: persist in DB
     refresh_token_cache[user_id] = refresh_token
-    redirect_uri = f"https://test-fe-130.herokuapp.com/?username={display_name},userid={user_id},jwt={jwt}"
+    redirect_uri = f"https://test-fe-130.herokuapp.com/?username={display_name}&jwt={jwt}"
     return redirect(redirect_uri)
+
+@auth_api.route("/appdetails", methods=["GET"])
+def get_app_details():
+    redirect_uri = os.environ['SPOTIFY_REDIRECT_URI']
+    client_id = os.environ['CLIENT_ID']
+    scopes = Scopes.get_all()
+    data = {
+            'redirect_uri': redirect_uri,
+            'client_id': client_id,
+            'scopes': scopes
+            }
+    return jsonify(data)
         
 
 def create_jwt(access_token, user_id, expires_in):
