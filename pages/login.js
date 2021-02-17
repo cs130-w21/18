@@ -15,7 +15,6 @@ const LoginPage = (props) => {
         redurl.searchParams.append("response_type","code");
         redurl.searchParams.append("redirect_uri",data.redirect_uri);
         redurl.searchParams.append("scope",data.scopes);
-        //return <div>redurl.href</div>;
         window.location.href = redurl.href;
         },
         (error) => {});
