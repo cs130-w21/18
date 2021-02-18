@@ -50,7 +50,8 @@ def get_access_token():
     jwt = create_jwt(access_token, user_id, expires_in)
     #save refresh token TODO: persist in DB
     refresh_token_cache[user_id] = refresh_token
-    redirect_uri = f"https://test-fe-130.herokuapp.com/?username={display_name}&jwt={jwt}"
+    front_end_uri = os.environ['FRONT_END_URI']
+    redirect_uri = f"{front_end_uri}/?username={display_name}&jwt={jwt}"
     return redirect(redirect_uri)
 
 @auth_api.route("/appdetails", methods=["GET"])
