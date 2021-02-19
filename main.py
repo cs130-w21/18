@@ -3,6 +3,7 @@ from backend.mood import mood_api
 
 app = Flask(__name__)
 app.register_blueprint(mood_api, url_prefix='/api/v1/mood')
+app.register_blueprint(spotify_api, url_prefix='/api/v1/spotify')
 
 @app.route("/")
 def hello():
