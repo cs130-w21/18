@@ -12,7 +12,7 @@ class Constants(Enum):
 
 spotify_api = Blueprint('spotify_api', __name__)
 
-# Reference: 
+# Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
 def get_tracks(mood, authorization, **kwargs):
 	get_args = {}
 	if 'limit' not in kwargs:
