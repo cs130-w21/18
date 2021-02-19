@@ -27,5 +27,7 @@
       "prettier --write"
     ]
   },
-  "cacheDirectories": [".next/cache"]
+  "cacheDirectories": [
+    ".next/cache"
+  ]
 }

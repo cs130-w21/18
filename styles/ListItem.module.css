@@ -1,0 +1,32 @@
+.item {
+  height: 50px;
+  border-bottom: 1px solid black;
+}
+
+.name {
+  transition: color 0.2s ease;
+  text-decoration: none;
+  vertical-align: middle;
+  line-height: 50px;
+}
+
+/* These are to get the underline to go away */
+.name:link {
+  text-decoration: none;
+}
+
+.name:visited {
+  text-decoration: none;
+}
+
+.name:hover {
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.name:active {
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: bold;
+}
