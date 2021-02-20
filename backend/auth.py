@@ -85,8 +85,8 @@ def extract_credentials():
     now = datetime.timestamp(datetime.utcnow())
     expires_at = payload['expires_at']
 
-    #if now >= expires_at:
-    #    return jsonify({'error': 'Access Token expired'})
+    if now >= expires_at:
+        return jsonify({'error': 'Access Token expired'})
     g.user_id = payload['user_id']
     g.access_token = payload['access_token']
     print(g.user_id)
