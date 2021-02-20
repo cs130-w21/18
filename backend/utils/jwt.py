@@ -39,7 +39,7 @@ class HSAStrategy(JWTStrategy):
 
     @classmethod
     def decode(cls, token):
-        return decode(token, cls.secret, algorithms=[cls.algorithm])
+        return decode(token, cls.secret(), algorithms=[cls.algorithm()])
 
 class JWT:
     @classmethod

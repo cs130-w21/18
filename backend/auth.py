@@ -1,5 +1,6 @@
 import requests
-from flask import Blueprint, request, abort, Response, jsonify, url_for, redirect
+from flask import Blueprint, request, abort, Response, jsonify, url_for, redirect, g
+from jwt import InvalidTokenError
 import json
 import os
 import base64
@@ -66,6 +67,33 @@ def get_app_details():
             }
     return jsonify(data)
         
+def extract_credentials():
+    headers = request.headers
+    if not 'Authorization' in headers:
+        return jsonify({'error': 'JWT not provided'})
+    auth = headers['Authorization']
+    auth = auth.split(' ')
+    if len(auth) < 2:
+        return jsonify({'error': 'Malformed Header Syntax'})
+    jwt = auth[1]
+    try:
+        payload = JWT.decode(jwt)
+    except InvalidTokenError as e:
+        return jsonify({'error': f"Invalid Token\n{str(e)}"})
+    if not 'user_id' in payload or not 'access_token' in payload or not 'expires_at' in payload:
+        return jsonify({'error': 'Invalid JWT payload'})
+    now = datetime.timestamp(datetime.utcnow())
+    expires_at = payload['expires_at']
+
+    #if now >= expires_at:
+    #    return jsonify({'error': 'Access Token expired'})
+    g.user_id = payload['user_id']
+    g.access_token = payload['access_token']
+    print(g.user_id)
+    print(g.access_token)
+
+
+
 
 def create_jwt(access_token, user_id, expires_in):
     expiration = datetime.utcnow() + timedelta(seconds=expires_in - 120)
