@@ -11,21 +11,21 @@
 }
 
 /* These are to get the underline to go away */
-.name:link {
+.link:link {
   text-decoration: none;
 }
 
-.name:visited {
+.link:visited {
   text-decoration: none;
 }
 
-.name:hover {
+.link:hover {
   color: #0070f3;
   text-decoration: none;
   font-weight: bold;
 }
 
-.name:active {
+.link:active {
   color: #0070f3;
   text-decoration: none;
   font-weight: bold;
