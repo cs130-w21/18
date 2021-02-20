@@ -1,9 +1,11 @@
-from flask import Blueprint, request, abort, jsonify, Response
+from flask import Blueprint, request, abort, jsonify, Response, g
 from marshmallow import Schema, fields, validate, exceptions
 import copy
 import json
+from .auth import extract_credentials
 
 mood_api = Blueprint('mood_api', __name__)
+mood_api.before_request(extract_credentials)
 
 # TODO: use non-volatile memory to preserve moods even if server crashes
 mood_cache = {}
@@ -24,8 +26,8 @@ class CreateUpdateMood(Schema):
 	energy = fields.List(fields.Number(), required=False, validate=validate.Length(equal=3))
 
 # Create OR update mood (PUT request)
-@mood_api.route("/<user>/mood", methods=['PUT'])
-def create_update_custom_mood(user):
+@mood_api.route("/mood", methods=['PUT'])
+def create_update_custom_mood():
 	if not request.data or not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -40,6 +42,7 @@ def create_update_custom_mood(user):
 	except exceptions.ValidationError as err:
 		abort(422, description="Unprocessable entity: " + str(err.messages))
 
+	user = g.user_id
 	if user not in mood_cache:
 		mood_cache[user] = {}
 	mood_cache[user][name] = data
@@ -48,8 +51,8 @@ def create_update_custom_mood(user):
 	return jsonify(data)
 
 # Delete mood (DELETE request)
-@mood_api.route("/<user>/mood", methods=['DELETE'])
-def delete_custom_mood(user):
+@mood_api.route("/mood", methods=['DELETE'])
+def delete_custom_mood():
 	if not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -57,6 +60,7 @@ def delete_custom_mood(user):
 	if name is None:
 		abort(422, description="Unprocessable entity: missing mood name query string")
 
+	user = g.user_id
 	# Don't bother checking if mood actually exists
 	# Only need to delete if it exists
 	if user in mood_cache and name in mood_cache[user]:
@@ -66,8 +70,8 @@ def delete_custom_mood(user):
 	return Response(status = 200)
 
 # Read mood (GET request)
-@mood_api.route("/<user>/mood", methods=['GET'])
-def get_custom_mood(user):
+@mood_api.route("/mood", methods=['GET'])
+def get_custom_mood():
 	if not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -75,6 +79,7 @@ def get_custom_mood(user):
 	if name is None:
 		abort(422, description="Unprocessable entity: missing mood name query string")
 
+	user = g.user_id
 	if user in mood_cache and name in mood_cache[user]:
 		return jsonify(mood_cache[user][name])
 	return Response(status = 404)
