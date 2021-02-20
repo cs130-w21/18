@@ -14,7 +14,12 @@ const QuestionnaireController = (props) => {
   };
 
   const defaultSettings = {
-    energy: 5
+    danceability: 0.5,
+    instrumentalness: 0.5,
+    popularity: 0.5,
+    speechiness: 0.5,
+    valence: 0.5,
+    energy: 0.5
   };
 
   return (
