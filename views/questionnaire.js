@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import PageHead from "../components/head";
+import styles from "../styles/Questionnaire.module.css";
 
 const Questionnaire = (props) => {
   const [responses, setResponses] = useState(props.defaultSettings);
 
   const handleChange = (e) => {
-    setResponses((prevResponses) => ({ ...prevResponses, [e.target.id]: parseFloat(e.target.value) }));
+    var min = parseFloat((parseFloat(e.target.value) - 0.2).toFixed(2));
+    if (min < 0.0) {
+      min = 0.0;
+    }
+    var max = parseFloat((parseFloat(e.target.value) + 0.2).toFixed(2));
+    if (max > 1.0) {
+      max = 1.0;
+    }
+
+    setResponses((prevResponses) => ({ ...prevResponses, [e.target.id]: [min, max, parseFloat(e.target.value)] }));
   }
-  
+
   return (
     <>
       <PageHead/>
@@ -16,7 +26,7 @@ const Questionnaire = (props) => {
         <p>Tell us what kind of music you're in the mood for!</p>
       </div>
       <Form>
-        <Form.Group controlId="danceability">
+        <Form.Group className="slider" controlId="danceability">
           <Form.Label>Danceability</Form.Label>
           <Form.Control
             type="range"

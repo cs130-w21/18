@@ -14,12 +14,13 @@ const QuestionnaireController = (props) => {
   };
 
   const defaultSettings = {
-    danceability: 0.5,
-    instrumentalness: 0.5,
-    popularity: 0.5,
-    speechiness: 0.5,
-    valence: 0.5,
-    energy: 0.5
+    // attribute: [min, max, target]
+    danceability: [0.3, 0.7, 0.5],
+    instrumentalness: [0.3, 0.7, 0.5],
+    popularity: [0.3, 0.7, 0.5],
+    speechiness: [0.3, 0.7, 0.5],
+    valence: [0.3, 0.7, 0.5],
+    energy: [0.3, 0.7, 0.5],
   };
 
   return (
