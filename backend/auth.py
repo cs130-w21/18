@@ -89,10 +89,6 @@ def extract_credentials():
         return jsonify({'error': 'Access Token expired'})
     g.user_id = payload['user_id']
     g.access_token = payload['access_token']
-    print(g.user_id)
-    print(g.access_token)
-
-
 
 
 def create_jwt(access_token, user_id, expires_in):
