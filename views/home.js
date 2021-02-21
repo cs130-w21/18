@@ -36,15 +36,47 @@ const Home = (props) => {
     });
   }
 
+  const playlistBoxContents = () => {
+    if (props.loggedIn) {
+      if (openMood !== null) {
+        // User is logged in and a mood is selected
+        return (<>
+          <NewPlaylistButton mood={openMood} getNewPlaylist={() => makeNewPlaylist(openMood)}/>
+          <div className={styles.list}>
+            {
+              moods.get(openMood).playlists.map(
+                playlist => <PlaylistListItem key={playlist.id} name={playlist.name} id={playlist.id}/>
+              )
+            }
+          </div>
+        </>);
+      } else {
+        // Logged in, but user has no moods
+        return (
+          <div className={styles.list}>
+            Create a mood to get your first custom playlist!
+          </div>
+        );
+      }
+    } else {
+      // Box is empty if user is not logged in.
+      return '';
+    }
+  };
+
   return (
     <>
       <PageHead/>
       <div className="page_container">
-        <MusaicHeader/>
+        <MusaicHeader
+          loggedIn={props.loggedIn}
+          loginFunction={props.loginFunction}
+          logoutFunction={props.logoutFunction}
+        />
         <div className={styles.big_flex_container}>
           <div className={`${styles.row} ${styles.row_1}`}>
             <div className={`${styles.intro_box} ${styles.box}`}>
-              Welcome, {props.username}!
+              {props.username ? `Welcome, ${props.username}!` : "Welcome!"}
             </div>
             <div className={`${styles.instructions_box} ${styles.box}`}>
               <p><b>Here's how this works:</b> Answer a few questions, and we'll make you a brand new Spotify playlist
@@ -58,24 +90,22 @@ const Home = (props) => {
               <div className={styles.lower_box_text}>
                 Your Moods
               </div>
-              <NewMoodButton questionnaireUrl={props.questionnaireUrl}/>
-              <div className={styles.list}>
-                {moodListItems}
-              </div>
+              {
+                props.loggedIn ?
+                  (<>
+                    <NewMoodButton questionnaireUrl={props.questionnaireUrl}/>
+                    <div className={styles.list}>
+                      {moodListItems}
+                    </div>
+                  </>)
+                  : "Log in with Spotify to create your first mood!"
+              }
             </div>
             <div className={`${styles.bottom_box} ${styles.box}`}>
               <div className={styles.lower_box_text}>
                 Your Playlists
               </div>
-              <NewPlaylistButton mood={openMood} getNewPlaylist={() => makeNewPlaylist(openMood)}/>
-              <div className={styles.list}>
-                {(openMood === null) ?
-                  "Create a mood to get your first custom playlist!" :
-                  moods.get(openMood).playlists.map(playlist =>
-                    <PlaylistListItem key={playlist.id} name={playlist.name} id={playlist.id}/>
-                  )
-                }
-              </div>
+              {playlistBoxContents()}
             </div>
           </div>
         </div>
