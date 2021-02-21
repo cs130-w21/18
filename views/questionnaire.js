@@ -26,7 +26,16 @@ const Questionnaire = (props) => {
         <p>Tell us what kind of music you're in the mood for!</p>
       </div>
       <Form>
-        <Form.Group className="slider" controlId="danceability">
+        <Form.Group controlId="name">
+          <Form.Label>Name your mood</Form.Label>
+          <Form.Control
+            // bsPrefix="inputBox"
+            className={styles.inputBox}
+            type="text"
+            onChange={(e) => setResponses((prevResponses) => ({ ...prevResponses, name: e.target.value}))}
+          />
+        </Form.Group>
+        <Form.Group controlId="danceability">
           <Form.Label>Danceability</Form.Label>
           <Form.Control
             type="range"

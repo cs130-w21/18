@@ -1,0 +1,6 @@
+.inputBox {
+    width: 300px;
+    border: 1px solid #9A9A9A;
+    box-sizing: border-box;
+    border-radius: 30px;
+}
