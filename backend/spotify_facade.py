@@ -4,6 +4,7 @@ from flask import Blueprint, g, request
 from .auth import extract_credentials
 from .mood_generator import MoodGenerator, CreateOrUpdateMoodStrategy, \
 		GetMoodFromDBStrategy, DeleteMoodFromDBStrategy
+import json
 
 class Constants(Enum):
 	LIMIT = '10'
@@ -13,6 +14,8 @@ class Constants(Enum):
 	SPOTIFY_SEARCH = 'https://api.spotify.com/v1/search'
 	SPOTIFY_RECOMMENDATIONS = 'https://api.spotify.com/v1/recommendations'
 	SPOTIFY_TOP_ARTISTS_AND_TRACKS = 'https://api.spotify.com/v1/me/top/{0}'
+	SPOTIFY_MAKE_PLAYLIST = 'https://api.spotify.com/v1/users/{0}/playlists'
+	SPOTIFY_ADD_TO_PLAYLIST = 'https://api.spotify.com/v1/playlists/{0}/tracks'
 	
 spotify_api = Blueprint('spotify_api', __name__)
 spotify_api.before_request(extract_credentials)
@@ -81,6 +84,7 @@ def get_playlist_from_mood():
 	print(get_args)
 	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS.value, params=get_args, headers=headers).json()
 
+# Returns Spotify ID of queried track/artist
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-search
 @spotify_api.route("/search", methods=['GET'])
 def get_spotify_id():
@@ -107,3 +111,40 @@ def get_spotify_id():
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
 	return requests.get(Constants.SPOTIFY_SEARCH.value, params=get_args, headers=headers).json()
+
+# Makes playlist with given tracks
+# Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-create-playlist
+@spotify_api.route("/make-playlist", methods=["POST"])
+def make_playlist():
+	if not request.data:
+		abort(400, description="Malformed syntax")
+
+	data = json.loads(request.data.decode("utf8"))
+	if 'playlist_name' not in data:
+		abort(422, description="Unprocessable entity: missing playlist name")
+	if 'track_uris' not in data:
+		abort(422, description="Unprocessable entity: missing track URIs")
+
+	oauth_access_token = g.access_token
+	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
+
+	post_data = {
+		'name': data['playlist_name'],
+		'public': 'false'
+	}
+	resp = requests.post(Constants.SPOTIFY_MAKE_PLAYLIST.value.format(g.user_id), data=post_data)
+	if not resp.ok:
+		print(resp.text)
+		abort(500, "Error in making playlist")
+	playlist_id = resp.json()['id']
+
+	post_data = {
+		'uris': data['track_uris']
+	}
+	resp = requests.post(Constants.SPOTIFY_ADD_TO_PLAYLIST.value.format(playlist_id), data=post_data)
+	if not resp.ok:
+		print(resp.text)
+		abort(500, "Error in adding to playlist")
+
+	return jsonify({'playlist_id': playlist_id})
+
