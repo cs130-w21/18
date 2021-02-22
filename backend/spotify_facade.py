@@ -46,30 +46,30 @@ def get_playlist_from_mood(mood_name, **kwargs):
 		# Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
 		top_artists = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('artists'), params={'limit': Constants.LIMIT}, headers=headers)
 		if not top_artists.ok:
-	      print(top_artists.text)
-	      abort(500, "Error in retrieving user's top artists")
-	  top_artists = top_artists.json()
-	  seed_artists = []
-	  top_genres = set()
-	  for artist in top_artists['items']:
-	  	seed_artists.append(artist['id'])
-	  	top_genres.update(artist['genres'])
+			print(top_artists.text)
+			abort(500, "Error in retrieving user's top artists")
+		top_artists = top_artists.json()
+		seed_artists = []
+		top_genres = set()
+		for artist in top_artists['items']:
+			seed_artists.append(artist['id'])
+			top_genres.update(artist['genres'])
 
-	  if 'seed_artists' not in get_args:
-	  	get_args['seed_artists'] = seed_artists
-	  if 'seed_genres' not in get_args
-	  	get_args['top_genres'] = list(top_genres)
+		if 'seed_artists' not in get_args:
+			get_args['seed_artists'] = seed_artists
+		if 'seed_genres' not in get_args
+			get_args['top_genres'] = list(top_genres)
 
 	if 'seed_tracks' not in get_args:
 		# Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
-	  top_tracks = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('tracks'), params={'limit': Constants.LIMIT}, headers=headers)
-	  if not top_tracks.ok:
-	      print(top_tracks.text)
-	      abort(500, "Error in retrieving user's top tracks")
-	  top_tracks = top_tracks.json()
-	  get_args['seed_tracks'] = []
-	  for track in top_tracks['items']:
-	  	get_args['seed_tracks'].append(track['id'])
+		top_tracks = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('tracks'), params={'limit': Constants.LIMIT}, headers=headers)
+		if not top_tracks.ok:
+			print(top_tracks.text)
+			abort(500, "Error in retrieving user's top tracks")
+		top_tracks = top_tracks.json()
+		get_args['seed_tracks'] = []
+		for track in top_tracks['items']:
+			get_args['seed_tracks'].append(track['id'])
 
 	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS, params=get_args, headers=headers).json()
 
@@ -99,4 +99,3 @@ def get_spotify_id():
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
 	return requests.get(Constants.SPOTIFY_SEARCH, params=get_args, headers=headers).json()
-
