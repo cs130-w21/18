@@ -5,6 +5,8 @@ jobs:
     install: pip install -r requirements.txt
     before_script: gunicorn main:app &
     script: pytest
+    env:
+        - ALLOW_ORIGINS='*'
 deploy:
   - provider: heroku
     app: musaic-13018

@@ -28,6 +28,10 @@ def get_tracks(mood, authorization, **kwargs):
 		else:	# seed parameters
 			get_args[k] = v
 
+	# TODO: default values for seeds
+	# References: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/?type=artists,,
+	# https://developer.spotify.com/console/get-available-genre-seeds/
+
 	# TODO: how to get OAuth access token?
 	oauth_access_token = ''
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
