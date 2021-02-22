@@ -78,6 +78,7 @@ def get_playlist_from_mood():
 		for track in top_tracks['items']:
 			get_args['seed_tracks'].append(track['id'])
 
+	print(get_args)
 	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS.value, params=get_args, headers=headers).json()
 
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-search
