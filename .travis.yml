@@ -6,7 +6,8 @@ jobs:
     before_script: gunicorn main:app &
     script: pytest
     env:
-        - ALLOW_ORIGINS='*'
+    - ALLOW_ORIGINS='*'
+    - secure: HWnGYgH/OXujLzdnk74A8npCVYUW9YXTb0ylPM8Cx8HkqnvQrULSrMwMnzjut/gv2hQEmf4QR85EdDWwp6q6VMrNNOUq3+ozNTO2KLJYOry1XNXW9FNuX77FU0NfLeszJsqd9Qv+FVbkjFdWpd1QgbXZs7EzaY09WWNUTPXwUhHtfrctT1JbWQk4XUYCsv8+ty7mbXYl+8lDMckfndtu7shPi0cVcndQk4fIfsQgyB6nOQzsWh4srdDSRwWNvCxvFSL1WXkG2NZnx4uxne3bGaV153BmyxiN9lmUQ4gqmvLVcgNTn/DhRwSP0+Bv1+S6WrSNgIqpUhcA0EvRnazSwUljmeIQQCZ1Lxy+9q6/GS+KHfY3l64alsZ26FoL6QTlAXyOeEpjJAyL22oVgDAP+Yw6YrcHNtqdHlPP8C78+4c7EoXwAlm/LLZNUfutF/YpXseVFYfP/WGYOf+vDXtvuWvlzVUokT5ETErtZTu6Aq/8WWQzQdiKv6mCBCsBl5Fatt8PQhoq0iinmmFT2sS19Aa0hqXRTqp1J4k40ykWUiQJXkzakwMsk31R/Kr/WfFi5RT8xVMWALA9CxHe1IlXPD+rp/fvnQhXANa/fs13iAyHh8B8xNz2iVPxi0Om3lcO1ocm+1tGtYsGEyFFxlky2pg0gidig/alufr0zD/TCKg=
 deploy:
   - provider: heroku
     app: musaic-13018
