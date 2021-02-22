@@ -1,6 +1,7 @@
 import requests
 from enum import Enum
-from flask import Blueprint
+from flask import Blueprint, g
+from .auth import extract_credentials
 
 class Constants(Enum):
 	LIMIT = '10'
@@ -9,11 +10,14 @@ class Constants(Enum):
 
 	SPOTIFY_SEARCH = 'https://api.spotify.com/v1/search'
 	SPOTIFY_RECOMMENDATIONS = 'https://api.spotify.com/v1/recommendations'
+	SPOTIFY_TOP_ARTISTS_AND_TRACKS = 'https://api.spotify.com/v1/me/top/{0}'
 
 spotify_api = Blueprint('spotify_api', __name__)
+spotify_api.before_request(extract_credentials)
 
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
-def get_tracks(mood, authorization, **kwargs):
+@mood_api.route("/get_", methods=['PUT'])
+def get_playlist_from_mood(mood, **kwargs):
 	get_args = {}
 	if 'limit' not in kwargs:
 		get_args['limit'] = Constants.LIMIT
@@ -28,13 +32,14 @@ def get_tracks(mood, authorization, **kwargs):
 		else:	# seed parameters
 			get_args[k] = v
 
-	# TODO: default values for seeds
-	# References: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/?type=artists,,
-	# https://developer.spotify.com/console/get-available-genre-seeds/
-
-	# TODO: how to get OAuth access token?
-	oauth_access_token = ''
+	oauth_access_token = g.access_token
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
+
+	# References: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/?type=artists,
+	# https://developer.spotify.com/console/get-available-genre-seeds/
+	top_artists = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('artists'), params={'limit': Constants.LIMIT}, headers=headers).json()
+	if top_artists.ok:
+
 
 	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS, params=get_args, headers=headers).json()
 
@@ -60,8 +65,7 @@ def get_spotify_id():
 	for k, v in request.args.items():
 		get_args[k] = v
 
-	# TODO: how to get OAuth access token?
-	oauth_access_token = ''
+	oauth_access_token = g.access_token
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
 	return requests.get(Constants.SPOTIFY_SEARCH, params=get_args, headers=headers).json()

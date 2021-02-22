@@ -8,13 +8,15 @@ mood_api = Blueprint('mood_api', __name__)
 mood_api.before_request(extract_credentials)
 
 # TODO: use non-volatile memory to preserve moods even if server crashes
+# Change to use DBFacade
 mood_cache = {}
 
 # (Create or Update) Mood Schema
 class CreateUpdateMood(Schema):
-	seed_artists = fields.List(fields.String(), required=True, validate=validate.Length(min=1))
-	seed_genres = fields.List(fields.String(), required=True, validate=validate.Length(min=1))
-	seed_tracks = fields.List(fields.String(), required=True, validate=validate.Length(min=1))
+	# no longer requiring seed tracks
+	seed_artists = fields.List(fields.String(), required=False, validate=validate.Length(min=1))
+	seed_genres = fields.List(fields.String(), required=False, validate=validate.Length(min=1))
+	seed_tracks = fields.List(fields.String(), required=False, validate=validate.Length(min=1))
 
 	# each is num list [min, max, target]
 	# TODO: check if min < target < max
