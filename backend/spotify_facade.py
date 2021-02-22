@@ -24,6 +24,7 @@ def get_playlist_from_mood(mood_name, **kwargs):
 	mood = generator.generate()
 	if mood is None:
 		return Response(status = 404)
+	mood = mood.params
 
 	get_args = {}
 	if 'limit' not in kwargs:
