@@ -3,6 +3,7 @@ from flask_cors import CORS
 from os import environ
 from backend.mood import mood_api
 from backend.auth import auth_api
+from backend.spotify_facade import spotify_api
 from backend.utils.db import DB
 
 with DB() as db:
