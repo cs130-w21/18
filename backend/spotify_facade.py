@@ -18,7 +18,7 @@ spotify_api = Blueprint('spotify_api', __name__)
 spotify_api.before_request(extract_credentials)
 
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
-@mood_api.route("/playlist-from-mood", methods=['GET'])
+@spotify_api.route("/playlist-from-mood", methods=['GET'])
 def get_playlist_from_mood(mood_name, **kwargs):
 	generator = MoodGenerator(mood_name, g.user_id, None, GetMoodFromDBStrategy)
 	mood = generator.generate()
