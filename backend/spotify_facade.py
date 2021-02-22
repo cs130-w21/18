@@ -19,17 +19,23 @@ spotify_api.before_request(extract_credentials)
 
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
 @spotify_api.route("/playlist-from-mood", methods=['GET'])
-def get_playlist_from_mood(mood_name, **kwargs):
-	generator = MoodGenerator(mood_name, g.user_id, None, GetMoodFromDBStrategy)
+def get_playlist_from_mood():
+	if not request.args:
+		abort(400, description="Malformed syntax")
+
+	if request.args.get('mood_name') is None: # ?mood_name = mood name string
+		abort(422, description="Unprocessable entity: missing mood name")
+
+	generator = MoodGenerator(request.args.get('mood_name'), g.user_id, None, GetMoodFromDBStrategy)
 	mood = generator.generate()
 	if mood is None:
 		return Response(status = 404)
 	mood = mood.params
 
 	get_args = {}
-	if 'limit' not in kwargs:
+	if 'limit' not in request.args:
 		get_args['limit'] = Constants.LIMIT.value
-	if 'market' not in kwargs:
+	if 'market' not in request.args:
 		get_args['market'] = Constants.MARKET.value
 	for k, v in mood.items():
 		# separate Spotify parameters
