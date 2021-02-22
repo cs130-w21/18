@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from flask import Blueprint, g
+from flask import Blueprint, g, request
 from .auth import extract_credentials
 from .mood_generator import MoodGenerator, CreateOrUpdateMoodStrategy, \
 		GetMoodFromDBStrategy, DeleteMoodFromDBStrategy
@@ -28,9 +28,9 @@ def get_playlist_from_mood(mood_name, **kwargs):
 
 	get_args = {}
 	if 'limit' not in kwargs:
-		get_args['limit'] = Constants.LIMIT
+		get_args['limit'] = Constants.LIMIT.value
 	if 'market' not in kwargs:
-		get_args['market'] = Constants.MARKET
+		get_args['market'] = Constants.MARKET.value
 	for k, v in mood.items():
 		# separate Spotify parameters
 		if 'seed' not in k:
@@ -45,7 +45,7 @@ def get_playlist_from_mood(mood_name, **kwargs):
 
 	if 'seed_artists' not in get_args or 'seed_genres' not in get_args:
 		# Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
-		top_artists = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('artists'), params={'limit': Constants.LIMIT}, headers=headers)
+		top_artists = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.value.format('artists'), params={'limit': Constants.LIMIT.value}, headers=headers)
 		if not top_artists.ok:
 			print(top_artists.text)
 			abort(500, "Error in retrieving user's top artists")
@@ -63,7 +63,7 @@ def get_playlist_from_mood(mood_name, **kwargs):
 
 	if 'seed_tracks' not in get_args:
 		# Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
-		top_tracks = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.format('tracks'), params={'limit': Constants.LIMIT}, headers=headers)
+		top_tracks = requests.get(Constants.SPOTIFY_TOP_ARTISTS_AND_TRACKS.value.format('tracks'), params={'limit': Constants.LIMIT.value}, headers=headers)
 		if not top_tracks.ok:
 			print(top_tracks.text)
 			abort(500, "Error in retrieving user's top tracks")
@@ -72,7 +72,7 @@ def get_playlist_from_mood(mood_name, **kwargs):
 		for track in top_tracks['items']:
 			get_args['seed_tracks'].append(track['id'])
 
-	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS, params=get_args, headers=headers).json()
+	return requests.get(Constants.SPOTIFY_RECOMMENDATIONS.value, params=get_args, headers=headers).json()
 
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-search
 @spotify_api.route("/search", methods=['GET'])
@@ -83,20 +83,20 @@ def get_spotify_id():
 	if request.args.get('query') is None: # ?query = query string
 		abort(422, description="Unprocessable entity: missing query")
 
-	if request.args.get('type') is None: # ?type = query string (artist, genre, or track)
+	if request.args.get('type') is None: # ?type = query string (artist or track)
 		abort(422, description="Unprocessable entity: missing query type")
 
 	get_args = {}
 	if 'limit' not in request.args:
-		get_args['limit'] = Constants.LIMIT
+		get_args['limit'] = Constants.LIMIT.value
 	if 'market' not in request.args:
-		get_args['market'] = Constants.MARKET
+		get_args['market'] = Constants.MARKET.value
 	if 'offset' not in request.args:
-		get_args['offset'] = Constants.OFFSET
+		get_args['offset'] = Constants.OFFSET.value
 	for k, v in request.args.items():
 		get_args[k] = v
 
 	oauth_access_token = g.access_token
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
-	return requests.get(Constants.SPOTIFY_SEARCH, params=get_args, headers=headers).json()
+	return requests.get(Constants.SPOTIFY_SEARCH.value, params=get_args, headers=headers).json()
