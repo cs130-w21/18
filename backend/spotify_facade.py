@@ -57,7 +57,7 @@ def get_playlist_from_mood(mood_name, **kwargs):
 
 		if 'seed_artists' not in get_args:
 			get_args['seed_artists'] = seed_artists
-		if 'seed_genres' not in get_args
+		if 'seed_genres' not in get_args:
 			get_args['top_genres'] = list(top_genres)
 
 	if 'seed_tracks' not in get_args:
