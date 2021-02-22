@@ -5,7 +5,7 @@ def test_hello_world():
     resp = requests.get("http://localhost:8000/")
     assert(resp.text == "Hello World!")
 
-def do_no_test_mood_api():
+def do_not_test_mood_api():
     url = 'http://localhost:8000/api/v1/mood/fakeUser/mood?name=helloworld'
     data = {
         "seed_artists": ["hello", "world", "python"],
