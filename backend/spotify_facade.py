@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from flask import Blueprint, g, request
+from flask import Blueprint, request, abort, jsonify, Response, g
 from .auth import extract_credentials
 from .mood_generator import MoodGenerator, CreateOrUpdateMoodStrategy, \
 		GetMoodFromDBStrategy, DeleteMoodFromDBStrategy
