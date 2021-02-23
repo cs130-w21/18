@@ -27,6 +27,8 @@ def get_playlist_from_mood():
 	if 'idx' not in request.args:
 		abort(422, description="Unprocessable entity: missing playlist idx")
 
+	request.headers['Accept'] = 'application/json'
+	request.headers['Content-Type'] = 'application/json'
 	resp = requests.post(Constants.MAKE_PLAYLIST.value, data={'playlist_name': request.args['mood_name'] + ' ' + request.args['idx'], \
 		'track_uris': track_uris}, headers=request.headers)
 	if not resp.ok:
