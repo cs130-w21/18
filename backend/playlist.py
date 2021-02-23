@@ -13,11 +13,8 @@ class Constants(Enum):
 
 @playlist_api.route("/playlist-from-mood", methods=['GET'])
 def get_playlist_from_mood():
-	oauth_access_token = g.access_token
-	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
-
 	# request.args should contain mood_name and idx (i.e. playlist idx)
-	resp = requests.get(Constants.GET_PLAYLIST_FROM_MOOD.value, params=request.args, headers=headers)
+	resp = requests.get(Constants.GET_PLAYLIST_FROM_MOOD.value, params=request.args, headers=request.headers)
 	if not resp.ok:
 		return resp.json()
 	resp_json = resp.json()
@@ -32,7 +29,7 @@ def get_playlist_from_mood():
 		abort(422, description="Unprocessable entity: missing playlist idx")
 
 	resp = requests.post(Constants.MAKE_PLAYLIST.value, data={'playlist_name': mood_name + ' ' + request.args['idx'], \
-		'track_uris': track_uris}, headers=headers)
+		'track_uris': track_uris}, headers=request.headers)
 	if not resp.ok:
 		return resp.json()
 	playlist_id = resp.json()['playlist_id']
