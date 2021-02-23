@@ -1,22 +1,23 @@
 import requests
 from enum import Enum
-from flask import Blueprint, g, request, url_for
+from flask import Blueprint, g, request
 from .auth import extract_credentials
 from .spotify_facade import spotify_api
 
 playlist_api = Blueprint('playlist_api', __name__)
 playlist_api.before_request(extract_credentials)
 
+class Constants(Enum):
+	GET_PLAYLIST_FROM_MOOD = 'https://musaic-13018.herokuapp.com/api/v1/spotify/playlist-from-mood'
+	MAKE_PLAYLIST = 'https://musaic-13018.herokuapp.com/api/v1/spotify/make-playlist'
+
 @playlist_api.route("/playlist-from-mood", methods=['GET'])
 def get_playlist_from_mood():
-	GET_PLAYLIST_FROM_MOOD = url_for('spotify_api.get_playlist_from_mood')
-	MAKE_PLAYLIST = url_for('spotify_api.make_playlist')
-
 	oauth_access_token = g.access_token
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
 	# request.args should contain mood_name and idx (i.e. playlist idx)
-	resp = requests.get(GET_PLAYLIST_FROM_MOOD, params=request.args, headers=headers)
+	resp = requests.get(Constants.GET_PLAYLIST_FROM_MOOD.value, params=request.args, headers=headers)
 	if not resp.ok:
 		return resp.json()
 	resp_json = resp.json()
@@ -29,7 +30,7 @@ def get_playlist_from_mood():
 	if 'idx' not in request.args:
 		abort(422, description="Unprocessable entity: missing playlist idx")
 
-	resp = requests.post(MAKE_PLAYLIST, data={'playlist_name': mood_name + ' ' + request.args['idx'], \
+	resp = requests.post(Constants.MAKE_PLAYLIST.value, data={'playlist_name': mood_name + ' ' + request.args['idx'], \
 		'track_uris': track_uris}, headers=headers)
 	if not resp.ok:
 		return resp.json()
