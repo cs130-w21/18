@@ -116,6 +116,7 @@ def get_spotify_id():
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-create-playlist
 @spotify_api.route("/make-playlist", methods=["POST"])
 def make_playlist():
+	print(request.data)
 	if not request.data:
 		abort(400, description="Malformed syntax")
 
