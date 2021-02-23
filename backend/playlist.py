@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from flask import Blueprint, g, request
+from flask import Blueprint, request, abort, jsonify, Response, g
 from .auth import extract_credentials
 from .spotify_facade import spotify_api
 
@@ -18,7 +18,6 @@ def get_playlist_from_mood():
 	if not resp.ok:
 		return resp.json()
 	resp_json = resp.json()
-	print(resp_json)
 
 	track_uris = []
 	for track in resp_json['tracks']:
