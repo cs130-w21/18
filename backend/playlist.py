@@ -3,6 +3,7 @@ from enum import Enum
 from flask import Blueprint, request, abort, jsonify, Response, g
 from .auth import extract_credentials
 from .spotify_facade import spotify_api
+import json
 
 playlist_api = Blueprint('playlist_api', __name__)
 playlist_api.before_request(extract_credentials)
@@ -28,7 +29,7 @@ def get_playlist_from_mood():
 		abort(422, description="Unprocessable entity: missing playlist idx")
 
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': request.headers['Authorization']}
-	resp = requests.post(Constants.MAKE_PLAYLIST.value, data={'playlist_name': request.args['mood_name'] + ' ' + request.args['idx'], \
+	resp = requests.post(Constants.MAKE_PLAYLIST.value, json={'playlist_name': request.args['mood_name'] + ' ' + request.args['idx'], \
 		'track_uris': track_uris}, headers=headers)
 	if not resp.ok:
 		return resp.json()

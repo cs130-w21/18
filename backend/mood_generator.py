@@ -71,7 +71,6 @@ class GetMoodFromDBStrategy(GenerationStrategy):
             mood_id, params = db.get_mood_by_name(self.name, self.creator_id)
         if mood_id is None:
             return None
-        params = MoodSchema().loads(params)
         return Mood(self.name, self.creator_id, params, mood_id)
 
 
@@ -82,5 +81,4 @@ class DeleteMoodFromDBStrategy(GenerationStrategy):
             mood_id, params = db.delete_mood(self.name, self.creator_id)
         if mood_id is None:
             return None
-        params = MoodSchema().loads(params)
         return Mood(self.name, self.creator_id, params, mood_id)
