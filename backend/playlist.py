@@ -21,6 +21,7 @@ def get_playlist_from_mood():
 	if not resp.ok:
 		return resp.json()
 	resp_json = resp.json()
+	print(resp_json)
 
 	track_uris = []
 	for track in resp_json['tracks']:
