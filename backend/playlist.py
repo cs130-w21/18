@@ -1,17 +1,17 @@
 import requests
 from enum import Enum
-from flask import Blueprint, g, request
+from flask import Blueprint, g, request, url_for
 from .auth import extract_credentials
 
 playlist_api = Blueprint('playlist_api', __name__)
 playlist_api.before_request(extract_credentials)
 
 class Constants(Enum):
-	GET_PLAYLIST_FROM_MOOD = '/api/v1/spotify/playlist-from-mood'
-	MAKE_PLAYLIST = '/api/v1/spotify/make-playlist'
+	GET_PLAYLIST_FROM_MOOD = url_for('get_playlist_from_mood')
+	MAKE_PLAYLIST = url_for('make_playlist')
 
 @playlist_api.route("/playlist-from-mood", methods=['GET'])
-def get_playlist_from_mood():
+def playlist_from_mood():
 	oauth_access_token = g.access_token
 	headers = {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + oauth_access_token}
 
