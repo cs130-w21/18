@@ -24,6 +24,12 @@ export default function Home() {
           Generate your playlist!
         </Button>
       </Link>
+
+      <Link href="/explore">
+        <Button>
+          Explore
+        </Button>
+      </Link>
     </div>
   );
 };
