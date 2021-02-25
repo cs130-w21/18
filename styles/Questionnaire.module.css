@@ -1,0 +1,40 @@
+.title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 25px;
+}
+
+.formContainer {
+  margin: 25px 200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.moodNameContainer {
+  margin: auto;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.inputBox {
+  width: 300px;
+  border: 1px solid #9A9A9A;
+  box-sizing: border-box;
+  border-radius: 30px;
+}
+
+.formText {
+  font-size: 20px;
+  margin: auto;
+}
+
+.getPlaylistBtn {
+  margin: auto;
+  width: 200px;
+}
