@@ -1,4 +1,6 @@
 import React from "react";
+import { useRouter } from 'next/router'
+import { parseCookies, setCookie, destroyCookie } from "nookies";
 import Home from "../views/home";
 import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
 
@@ -7,10 +9,10 @@ import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
  */
 
 export default function HomeController(props) {
+  const router = useRouter();
 
   // TEST DATA
   const testData = {
-    username: "User",
     playlists: [
       { name: "Heavy metal for studying", id: 123456, mood_id: 333333 },
       { name: "Elevator music", id: 111111, mood_id: 444444 },
@@ -53,9 +55,24 @@ export default function HomeController(props) {
     return newPlaylist;
   };
 
+  const loginFunction = async () => {
+    return;
+  };
+
+  const logoutFunction = () => {
+    // Remove cookies
+    destroyCookie(null, "jwt");
+    destroyCookie(null, "username");
+    // Reload so all previous user data goes away.
+    router.reload();
+  };
+
   return (
     <Home
-      username={testData.username}
+      loggedIn={props.username && props.jwt}
+      username={props.username}
+      loginFunction={loginFunction}
+      logoutFunction={logoutFunction}
       questionnaireUrl={'/questionnaire'}
       getNewPlaylist={getNewPlaylist}
       moods={moods}
@@ -64,8 +81,38 @@ export default function HomeController(props) {
 };
 
 export async function getServerSideProps(context) {
+  const cookies = parseCookies(context);
+
+  let username = null, jwt = null;
+  // If the user is coming from Spotify (username & jwt are in params), store their username and jwt in cookies.
+  if (context.query.username && context.query.jwt) {
+    // Don't update user if there's already one logged in.
+    if (typeof cookies.username === "undefined" && typeof cookies.jwt === "undefined") {
+      setCookie(context, "jwt", context.query.jwt);
+      setCookie(context, "username", context.query.username);
+    }
+    // This removes the parameters from the URL, because leaving them in causes issues.
+    return {
+      redirect: {
+        destination: '/',
+        permanent: true,
+      },
+    }
+  }
+
+  // Otherwise, try to load username & jwt from cookies.
+  username = cookies.username ?? null;
+  jwt = cookies.jwt ?? null;
+
   // TODO: Make back-end requests.
   const data = await fetchHomePageData();
+
   // Pass data to the page via props
-  return { props: { data } }
+  return {
+    props: {
+      data,
+      username,
+      jwt
+    }
+  }
 }
