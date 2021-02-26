@@ -32,3 +32,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Ignore yarn.lock so we only have package-lock.json (for Heroku deployment)
+yarn.lock
