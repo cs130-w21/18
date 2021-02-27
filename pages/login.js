@@ -4,7 +4,7 @@ const LoginPageController = (props) => {
   if (props.loggedIn) {
     return <Redirect to="/" />;
   } else {
-    useEffect(() => {
+    // useEffect(() => {
       fetch('https://musaic-13018.herokuapp.com/login/appdetails')
       .then(response => response.json())
       .then((data) => {
@@ -16,7 +16,7 @@ const LoginPageController = (props) => {
         window.location.href = redurl.href;
         },
         (error) => {});
-      }, [])
+      // }, [])
     return null;
   }
 
