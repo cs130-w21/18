@@ -1,12 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from 'next/router'
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import Home from "../views/home";
 import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
+// import LoginPageController from "./login.js"
 
 /* This function handles the login for the home page. It passes information to the home page view and returns that
  * React component with the parameters filled in.
  */
+async function getServerSideProps(context) {
+  const cookies = parseCookies(context);
+
+  let username = null, jwt = null;
+  // If the user is coming from Spotify (username & jwt are in params), store their username and jwt in cookies.
+  if (context.query.username && context.query.jwt) {
+    // Don't update user if there's already one logged in.
+    if (typeof cookies.username === "undefined" && typeof cookies.jwt === "undefined") {
+      setCookie(context, "jwt", context.query.jwt);
+      setCookie(context, "username", context.query.username);
+    }
+    // This removes the parameters from the URL, because leaving them in causes issues.
+    return {
+      redirect: {
+        destination: '/',
+        permanent: true,
+      },
+    }
+  }
+
+  // Otherwise, try to load username & jwt from cookies.
+  username = cookies.username ?? null;
+  jwt = cookies.jwt ?? null;
+
+  // TODO: Make back-end requests.
+  const data = await fetchHomePageData();
+
+  // Pass data to the page via props
+  return {
+    props: {
+      data,
+      username,
+      jwt
+    }
+  }
+}
 
 export default function HomeController(props) {
   const router = useRouter();
@@ -56,7 +93,17 @@ export default function HomeController(props) {
   };
 
   const loginFunction = async () => {
-    return;
+    fetch('https://musaic-13018.herokuapp.com/login/appdetails')
+    .then(response => response.json())
+    .then((data) => {
+      const redurl = new URL("https://accounts.spotify.com/authorize");
+      redurl.searchParams.append("client_id",data.client_id);
+      redurl.searchParams.append("response_type","code");
+      redurl.searchParams.append("redirect_uri",data.redirect_uri);
+      redurl.searchParams.append("scope",data.scopes);
+      window.location.href = redurl.href;
+      },
+      (error) => {});
   };
 
   const logoutFunction = () => {
@@ -79,40 +126,3 @@ export default function HomeController(props) {
     />
   );
 };
-
-export async function getServerSideProps(context) {
-  const cookies = parseCookies(context);
-
-  let username = null, jwt = null;
-  // If the user is coming from Spotify (username & jwt are in params), store their username and jwt in cookies.
-  if (context.query.username && context.query.jwt) {
-    // Don't update user if there's already one logged in.
-    if (typeof cookies.username === "undefined" && typeof cookies.jwt === "undefined") {
-      setCookie(context, "jwt", context.query.jwt);
-      setCookie(context, "username", context.query.username);
-    }
-    // This removes the parameters from the URL, because leaving them in causes issues.
-    return {
-      redirect: {
-        destination: '/',
-        permanent: true,
-      },
-    }
-  }
-
-  // Otherwise, try to load username & jwt from cookies.
-  username = cookies.username ?? null;
-  jwt = cookies.jwt ?? null;
-
-  // TODO: Make back-end requests.
-  const data = await fetchHomePageData();
-
-  // Pass data to the page via props
-  return {
-    props: {
-      data,
-      username,
-      jwt
-    }
-  }
-}
