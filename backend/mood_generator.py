@@ -25,24 +25,26 @@ class Mood:
     
 
 class MoodGenerator:
-    def __init__(self, name, creator_id, params, strategy):
+    def __init__(self, name, creator_id, params, mood_id, strategy):
         self.name = name
         self.creator_id = creator_id
         self.params = params
         self.strategy = strategy
+        self.mood_id = mood_id
 
     def set_strategy(self, strategy):
         self.strategy = strategy
 
     def generate(self):
-        return self.strategy(self.name, self.creator_id, self.params).generate()
+        return self.strategy(self.name, self.creator_id, self.params, self.mood_id).generate()
 
 
 class GenerationStrategy:
-    def __init__(self, name, creator_id, params):
+    def __init__(self, name, creator_id, params, mood_id):
         self.name = name
         self.creator_id = creator_id
         self.params = params
+        self.mood_id = mood_id
     
     def generate(self):
         raise NotImplementedError
@@ -82,3 +84,12 @@ class DeleteMoodFromDBStrategy(GenerationStrategy):
         if mood_id is None:
             return None
         return Mood(self.name, self.creator_id, params, mood_id)
+
+class GetMoodFromDBWithIDStrategy(GenerationStrategy):
+    def generate(self):
+        mood_name, creator_id, params = None, None, None
+        with DB() as db:
+            mood_name, creator_id, params = db.get_mood_by_id(self.mood_id)
+        if mood_name is None:
+            return None
+        return Mood(mood_name, creator_id, params, self.mood_id)
