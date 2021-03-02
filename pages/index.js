@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import Home from "../views/home";
 import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
@@ -8,24 +8,28 @@ import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
 /* This function handles the login for the home page. It passes information to the home page view and returns that
  * React component with the parameters filled in.
  */
-async function getServerSideProps(context) {
+export async function getServerSideProps(context) {
   const cookies = parseCookies(context);
 
-  let username = null, jwt = null;
+  let username = null,
+    jwt = null;
   // If the user is coming from Spotify (username & jwt are in params), store their username and jwt in cookies.
   if (context.query.username && context.query.jwt) {
     // Don't update user if there's already one logged in.
-    if (typeof cookies.username === "undefined" && typeof cookies.jwt === "undefined") {
+    if (
+      typeof cookies.username === "undefined" &&
+      typeof cookies.jwt === "undefined"
+    ) {
       setCookie(context, "jwt", context.query.jwt);
       setCookie(context, "username", context.query.username);
     }
     // This removes the parameters from the URL, because leaving them in causes issues.
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: true,
       },
-    }
+    };
   }
 
   // Otherwise, try to load username & jwt from cookies.
@@ -40,9 +44,9 @@ async function getServerSideProps(context) {
     props: {
       data,
       username,
-      jwt
-    }
-  }
+      jwt,
+    },
+  };
 }
 
 export default function HomeController(props) {
@@ -65,8 +69,8 @@ export default function HomeController(props) {
       { name: "(Thinking about) Working Out", id: 555555 },
       { name: "Post-130 Midterm", id: 666666 },
       { name: "Lounging", id: 222222 },
-    ]
-  }
+    ],
+  };
 
   // TODO: Replace this when API calls are implemented.
   // Associate playlists with moods and index moods by id.
@@ -74,7 +78,7 @@ export default function HomeController(props) {
   testData.moods.forEach((mood) => {
     moods.set(mood.id, {
       name: mood.name,
-      playlists: []
+      playlists: [],
     });
   });
   testData.playlists.forEach((playlist) => {
@@ -93,17 +97,19 @@ export default function HomeController(props) {
   };
 
   const loginFunction = async () => {
-    fetch('https://musaic-13018.herokuapp.com/login/appdetails')
-    .then(response => response.json())
-    .then((data) => {
-      const redurl = new URL("https://accounts.spotify.com/authorize");
-      redurl.searchParams.append("client_id",data.client_id);
-      redurl.searchParams.append("response_type","code");
-      redurl.searchParams.append("redirect_uri",data.redirect_uri);
-      redurl.searchParams.append("scope",data.scopes);
-      window.location.href = redurl.href;
-      },
-      (error) => {});
+    fetch("https://musaic-13018.herokuapp.com/login/appdetails")
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          const redurl = new URL("https://accounts.spotify.com/authorize");
+          redurl.searchParams.append("client_id", data.client_id);
+          redurl.searchParams.append("response_type", "code");
+          redurl.searchParams.append("redirect_uri", data.redirect_uri);
+          redurl.searchParams.append("scope", data.scopes);
+          window.location.href = redurl.href;
+        },
+        (error) => {}
+      );
   };
 
   const logoutFunction = () => {
@@ -120,9 +126,9 @@ export default function HomeController(props) {
       username={props.username}
       loginFunction={loginFunction}
       logoutFunction={logoutFunction}
-      questionnaireUrl={'/questionnaire'}
+      questionnaireUrl={"/questionnaire"}
       getNewPlaylist={getNewPlaylist}
       moods={moods}
     />
   );
-};
+}
