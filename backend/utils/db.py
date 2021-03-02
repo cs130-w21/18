@@ -34,7 +34,6 @@ class DB:
                 "name, creator_id, params"
                 ") values (%s, %s, %s) RETURNING mood_id;" 
                 )
-        params = Json(params)
         self._cursor.execute(insert, (name, creator_id, params)) 
         return self._cursor.fetchone()[0]
 
@@ -60,7 +59,7 @@ class DB:
         select = (
                 "SELECT * FROM Moods WHERE mood_id = %s;"
                 )
-        self._cursor.execute(select, (mood_id))
+        self._cursor.execute(select, (mood_id,))
         row = self._cursor.fetchone()
         if row is None:
             return None, None, None

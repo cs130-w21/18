@@ -2,8 +2,7 @@ import requests
 from enum import Enum
 from flask import Blueprint, request, abort, jsonify, Response, g
 from .auth import extract_credentials
-from .mood_generator import MoodGenerator, CreateOrUpdateMoodStrategy, \
-                GetMoodFromDBStrategy, DeleteMoodFromDBStrategy
+from .mood_generator import MoodGenerator, GetMoodFromDBWithIDStrategy
 import json
 class Constants(Enum):
     LIMIT = '10'
@@ -110,10 +109,17 @@ def get_playlist_from_mood():
     if not request.args:
         abort(400, description="Malformed syntax")
 
-    if request.args.get('mood_name') is None: # ?mood_name = mood name string
-        abort(422, description="Unprocessable entity: missing mood name")
+    if request.args.get('mood_id') is None: # ?mood_id = mood id string
+        abort(422, description="Unprocessable entity: missing mood id")
 
-    generator = MoodGenerator(request.args.get('mood_name'), g.user_id, None, GetMoodFromDBStrategy)
+    mood_id = request.args.get('mood_id')
+
+    try:
+        mood_id = int(mood_id)
+    except:
+        abort(422, description="Unprocessable entity: invalid mood id")
+
+    generator = MoodGenerator(None, None, None, mood_id, GetMoodFromDBWithIDStrategy)
     mood = generator.generate()
     if mood is None:
         return Response(status = 404)
