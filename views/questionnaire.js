@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import PageHead from "../components/head";
 import styles from "../styles/Questionnaire.module.css";
 
@@ -16,27 +16,46 @@ const Questionnaire = (props) => {
       max = 1.0;
     }
 
-    setResponses((prevResponses) => ({ ...prevResponses, [e.target.id]: [min, max, parseFloat(e.target.value)] }));
-  }
+    setResponses((prevResponses) => ({
+      ...prevResponses,
+      [e.target.id]: [min, max, parseFloat(e.target.value)],
+    }));
+  };
 
   return (
     <>
-      <PageHead/>
+      <PageHead />
+      {props.error !== "" ? (
+        <Alert
+          variant="primary"
+          className="justify-content-md-center w-50 mx-auto mb-0"
+        >
+          {props.error}
+        </Alert>
+      ) : (
+        ""
+      )}
       <div className={styles.formContainer}>
         <Form>
           <div className={styles.title}>
             Tell us what kind of music you're in the mood for!
-          </div> 
+          </div>
           <Form.Group controlId="name">
             <div className={styles.moodNameContainer}>
-              <Form.Label className={styles.formText}>Name your mood</Form.Label>
-                <Form.Control
-                  className={styles.inputBox}
-                  type="text"
-                  onChange={(e) => setResponses((prevResponses) => ({ ...prevResponses, name: e.target.value}))}
+              <Form.Label className={styles.formText}>
+                Name your mood
+              </Form.Label>
+              <Form.Control
+                className={styles.inputBox}
+                type="text"
+                onChange={(e) =>
+                  setResponses((prevResponses) => ({
+                    ...prevResponses,
+                    name: e.target.value,
+                  }))
+                }
               />
             </div>
-              
           </Form.Group>
           <Form.Group controlId="danceability">
             <Form.Label className={styles.formText}>Danceability</Form.Label>
@@ -51,7 +70,9 @@ const Questionnaire = (props) => {
             />
           </Form.Group>
           <Form.Group controlId="instrumentalness">
-            <Form.Label className={styles.formText}>Instrumentalness</Form.Label>
+            <Form.Label className={styles.formText}>
+              Instrumentalness
+            </Form.Label>
             <Form.Control
               type="range"
               className="form-range"
@@ -111,10 +132,14 @@ const Questionnaire = (props) => {
             />
           </Form.Group>
         </Form>
-        <Button className={styles.getPlaylistBtn} onClick={() => props.submitResponses(responses)}>Get my playlist!</Button>
-      
+        <Button
+          className={styles.getPlaylistBtn}
+          onClick={() => props.submitResponses(responses)}
+        >
+          Get my playlist!
+        </Button>
       </div>
-      </>
+    </>
   );
 };
 
