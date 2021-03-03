@@ -7,11 +7,11 @@ import base64
 from .utils.jwt import JWT
 from datetime import datetime, timedelta
 from .utils.constants import Scopes
+from .utils.db import DB
 
 auth_api = Blueprint('auth_api', __name__)
 SPOTIFY_URL = 'https://accounts.spotify.com/api/token'
 GRANT_TYPE = 'authorization_code'
-refresh_token_cache = {}
 
 @auth_api.route("/callback", methods=['GET'])
 def get_access_token():
@@ -49,8 +49,9 @@ def get_access_token():
     uri = resp_json['uri']
     user_id = uri.split(':')[2]
     jwt = create_jwt(access_token, user_id, expires_in)
-    #save refresh token TODO: persist in DB
-    refresh_token_cache[user_id] = refresh_token
+    #save refresh token and user_id
+    with DB() as db:
+        db.create_or_update_user(user_id, refresh_token)
     front_end_uri = os.environ['FRONT_END_URI']
     redirect_uri = f"{front_end_uri}/?username={display_name}&jwt={jwt}"
     return redirect(redirect_uri)
