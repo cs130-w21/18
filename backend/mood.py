@@ -23,13 +23,13 @@ def create_update_custom_mood():
 	# Request body validation
 	# Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
 	data = request.data.decode("utf8")
-	generator = MoodGenerator(name, g.user_id, data, CreateOrUpdateMoodStrategy)
+	generator = MoodGenerator(name, g.user_id, data, None, CreateOrUpdateMoodStrategy)
 	try:
 		mood = generator.generate()
 	except exceptions.ValidationError as err:
 		abort(422, description="Unprocessable entity: " + str(err.messages))
 
-	data = mood.params
+	data = {**mood.params, 'mood_id':mood.mood_id}
 
 	print(data)
 	return jsonify(data)
@@ -44,11 +44,12 @@ def delete_custom_mood():
 	if name is None:
 		abort(422, description="Unprocessable entity: missing mood name query string")
 
-	generator = MoodGenerator(name, g.user_id, None, DeleteMoodFromDBStrategy)
+	generator = MoodGenerator(name, g.user_id, None, None, DeleteMoodFromDBStrategy)
 	mood = generator.generate()
 
 	if not mood is None:
-		return jsonify(mood.params)
+		data = {**mood.params, 'mood_id': mood.mood_id}
+		return jsonify(data)
 	return Response(status = 200)
 
 # Read mood (GET request)
@@ -61,9 +62,10 @@ def get_custom_mood():
 	if name is None:
 		abort(422, description="Unprocessable entity: missing mood name query string")
 
-	generator = MoodGenerator(name, g.user_id, None, GetMoodFromDBStrategy)
+	generator = MoodGenerator(name, g.user_id, None, None, GetMoodFromDBStrategy)
 	mood = generator.generate()
 
 	if not mood is None:
-		return jsonify(mood.params)
+		data = {**mood.params, 'mood_id': mood.mood_id}
+		return jsonify(data)
 	return Response(status = 404)

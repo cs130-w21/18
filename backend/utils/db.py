@@ -34,7 +34,6 @@ class DB:
                 "name, creator_id, params"
                 ") values (%s, %s, %s) RETURNING mood_id;" 
                 )
-        params = Json(params)
         self._cursor.execute(insert, (name, creator_id, params)) 
         return self._cursor.fetchone()[0]
 
@@ -55,6 +54,16 @@ class DB:
         if row is None:
             return None, None
         return row[0], row[3]
+
+    def get_mood_by_id(self, mood_id):
+        select = (
+                "SELECT * FROM Moods WHERE mood_id = %s;"
+                )
+        self._cursor.execute(select, (mood_id,))
+        row = self._cursor.fetchone()
+        if row is None:
+            return None, None, None
+        return row[1], row[2], row[3]
 
     def delete_mood(self, name, creator_id):
         delete = (
