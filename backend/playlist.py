@@ -3,6 +3,7 @@ from enum import Enum
 from flask import Blueprint, request, abort, jsonify, Response, g
 from .auth import extract_credentials
 from .spotify_facade import spotify_api
+from .playlist_generator import PlaylistGenerator, GetPlaylistsFromDBStrategy
 import json
 
 playlist_api = Blueprint('playlist_api', __name__)
@@ -40,3 +41,20 @@ def get_playlist_from_mood():
 
 	resp_json['playlist_id'] = playlist_id
 	return jsonify(resp_json)
+
+@playlist_api.route("/playlists", methods=["GET"])
+def get_playlists():
+	if not request.args:
+		abort(400, description="Malformed syntax")
+
+	mood_id = request.args.get('mood_id') # ?mood_id = query string
+	if mood_id is None:
+		abort(422, description="Unprocessable entity: missing mood id query string")
+
+	generator = PlaylistGenerator(mood_id, g.user_id, None, GetPlaylistsFromDBStrategy)
+	playlists = generator.generate()
+
+	if not playlists is None:
+		data = {**playlists.params, 'mood_id': mood_id}
+		return jsonify(data)
+	return Response(status = 404)
