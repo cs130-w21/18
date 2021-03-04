@@ -93,3 +93,10 @@ class GetMoodFromDBWithIDStrategy(GenerationStrategy):
         if mood_name is None:
             return None
         return Mood(mood_name, creator_id, params, self.mood_id)
+
+class GetRecentMoodsFromDBStrategy(GenerationStrategy):
+    def generate(self):
+        with DB() as db:
+            recent_moods, other_users = db.get_recent_moods(self.creator_id)
+            return [Mood(mood['mood_name'], other_user, mood['params'], mood['mood_id']) \
+                for mood, other_user in zip(recent_moods, other_users)]

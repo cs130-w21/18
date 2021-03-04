@@ -4,7 +4,7 @@ import copy
 import json
 from .auth import extract_credentials
 from .mood_generator import MoodGenerator, CreateOrUpdateMoodStrategy, \
-		GetMoodFromDBStrategy, DeleteMoodFromDBStrategy
+		GetMoodFromDBStrategy, DeleteMoodFromDBStrategy, GetRecentMoodsFromDBStrategy
 
 mood_api = Blueprint('mood_api', __name__)
 mood_api.before_request(extract_credentials)
@@ -69,3 +69,10 @@ def get_custom_mood():
 		data = {**mood.params, 'mood_id': mood.mood_id}
 		return jsonify(data)
 	return Response(status = 404)
+
+# Get most recent moods from other users for Explore page (GET request)
+@mood_api.route("/recent-moods", methods=["GET"])
+def get_explore_moods():
+	generator = MoodGenerator(None, g.user_id, None, None, GetRecentMoodsFromDBStrategy)
+	recent_moods = generator.generate()
+	return jsonify(recent_moods)
