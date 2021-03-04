@@ -1,0 +1,13 @@
+.playlistContainer {
+    height: 100vh;
+    margin: 20px;
+}
+
+.embed {
+    display: flex;
+    justify-content: center;
+}
+
+.playlistText {
+    font-size: 20px;
+}
