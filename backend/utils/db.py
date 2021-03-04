@@ -138,6 +138,18 @@ class DB:
             return False
         return True
 
+    def get_recent_moods(self, user_id):
+        recent_moods = []
+        other_users = []
+        other_user_ids = self._get_other_user_ids(user_id)
+        for other_user in other_user_ids:
+            created_moods, _ = self._get_user_mood_ids(other_user[0])
+            if created_moods is None:
+                continue
+            recent_moods.append(self._get_mood_rows(created_moods)[-1])  # get most recent mood row
+            other_users.append(other_user[0])
+        return self._convert_mood_rows_to_list(recent_moods), other_users
+
     def _user_exists(self, user_id):
         row = self._get_user_row(user_id)
         if row is None:
@@ -167,3 +179,11 @@ class DB:
 
     def _convert_mood_rows_to_list(self, mood_rows):
         return [{'mood_id': row[0], 'mood_name': row[1], 'params': row[3]} for row in mood_rows]
+
+    def _get_other_user_ids(self, user_id):
+        select = (
+                "SELECT user_id FROM Users WHERE user_id != %s;"
+                )
+        self._cursor.execute(select, (user_id,))
+        return self._cursor.fetchall()
+    
