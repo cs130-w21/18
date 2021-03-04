@@ -33,9 +33,18 @@ class DB:
                 "refresh_token varchar"
                 ");"
                 )
+        create_playlists = (
+                "CREATE TABLE IF NOT EXISTS Playlists ("
+                "creator_id varchar,"
+                "mood_id integer,"
+                "idx integer,"
+                "uri varchar UNIQUE NOT NULL,"
+                "PRIMARY KEY (creator_id, mood_id, idx)"
+                ");"
+                )
         self._cursor.execute(create_moods)
         self._cursor.execute(create_users)
-        #TODO: Create Users and Playlists tables
+        self._cursor.execute(create_playlists)
 
     def create_mood(self, name, creator_id, params):
         insert = (
@@ -150,6 +159,41 @@ class DB:
             other_users.append(other_user[0])
         return self._convert_mood_rows_to_list(recent_moods), other_users
 
+    def create_playlist_on_mood(self, creator_id, mood_id, uri):
+        idx = self.get_next_playlist_idx_for_mood(creator_id, mood_id)
+        if idx is None:
+            return None
+        insert = (
+                "INSERT INTO Playlists("
+                "creator_id, mood_id, idx, uri"
+                ") values (%s, %s, %s, %s);"
+                )
+        try:
+            self._cursor.execute(insert, (creator_id, mood_id, idx, uri))
+        except psycopg2.Error:
+            return None
+        return idx
+
+    def get_mood_playlists(self, creator_id, mood_id):
+        select = (
+                "SELECT * FROM Playlists WHERE "
+                "creator_id = %s AND mood_id = %s;"
+                )
+        self._cursor.execute(select, (creator_id, mood_id))
+        rows = self._cursor.fetchall()
+        return rows
+
+    def get_next_playlist_idx_for_mood(self, creator_id, mood_id):
+        select_playlist_count = (
+                "SELECT COALESCE(max(idx), 0) FROM Playlists WHERE "
+                "creator_id = %s AND mood_id = %s;"
+                )
+        self._cursor.execute(select_playlist_count, (creator_id, mood_id))
+        row = self._cursor.fetchone()
+        if row is None:
+            return None
+        return row[0] + 1
+
     def _user_exists(self, user_id):
         row = self._get_user_row(user_id)
         if row is None:
@@ -186,4 +230,3 @@ class DB:
                 )
         self._cursor.execute(select, (user_id,))
         return self._cursor.fetchall()
-    

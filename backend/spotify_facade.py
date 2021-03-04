@@ -81,8 +81,8 @@ class Spotify:
         if not playlist_resp.ok:
             print(f"Unable to create playlist with name {playlist_name}")
             print(playlist_resp.json())
-            return None
-        return playlist_resp.json()['id']
+            return None, None
+        return playlist_resp.json()['id'], playlist_resp.json()['uri']
 
     def add_tracks_to_playlist(self, tracks, playlist_id):
         post_data = {
@@ -207,13 +207,13 @@ def make_playlist():
 
     oauth_access_token = g.access_token
 
-    playlist_id = Spotify(oauth_access_token).make_playlist(g.user_id, data['playlist_name'])
+    playlist_id, playlist_uri = Spotify(oauth_access_token).make_playlist(g.user_id, data['playlist_name'])
     
-    if playlist_id is None:
+    if playlist_id is None or playlist_uri is None:
         abort(500, "Error in making playlist")
 
     tracks_added = Spotify(oauth_access_token).add_tracks_to_playlist(data['track_uris'], playlist_id)
     if not tracks_added:
         abort(500, "Error in adding to playlist")
 
-    return jsonify({'playlist_id': playlist_id})
+    return jsonify({'playlist_uri': playlist_uri})
