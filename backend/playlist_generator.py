@@ -3,7 +3,10 @@ from .utils.db import DB
 # TODO: complete stub code
 class PlaylistGenerator:
     def __init__(self, mood_id, creator_id, params, strategy):
-    	pass
+    	self.mood_id = mood_id
+      self.creator_id = creator_id
+      self.params = params
+      self.strategy = strategy
 
     def set_strategy(self, strategy):
         self.strategy = strategy
