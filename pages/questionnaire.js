@@ -2,16 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Questionnaire from "../views/questionnaire";
 import { submitQuestionnaire } from "../lib/fetch";
+var _ = require("lodash");
 
 const QuestionnaireController = (props) => {
   const router = useRouter();
+  const [error, setError] = useState("");
 
-  const submitResponses = (responses) => {
-    responses = JSON.stringify(responses);
-    console.log(responses);
-    submitQuestionnaire(responses);
+  const submitResponses = async (responses) => {
+    let moodName = responses.name;
+    let paramResponses = _.omit(responses, ["name"]);
 
-    router.push('/playlist/2');
+    try {
+      const response = await submitQuestionnaire(moodName, paramResponses);
+      // console.log("submission response: " + JSON.stringify(response));
+      if (response.error !== "") {
+        throw response.error;
+      }
+    } catch (err) {
+      console.log(err);
+      setError(
+        "Sorry, we couldn't submit your responses. Please try again later."
+      );
+      return;
+    }
+
+    router.push("/");
   };
 
   const defaultSettings = {
@@ -29,6 +44,7 @@ const QuestionnaireController = (props) => {
     <Questionnaire
       defaultSettings={defaultSettings}
       submitResponses={submitResponses}
+      error={error}
     />
   );
 };
