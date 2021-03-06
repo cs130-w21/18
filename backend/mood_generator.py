@@ -10,7 +10,6 @@ class MoodSchema(Schema):
     # TODO: check if min < target < max
     danceability = fields.List(fields.Number(), validate=validate.Length(equal=3))
     instrumentalness = fields.List(fields.Number(), validate=validate.Length(equal=3))
-    popularity = fields.List(fields.Number(), validate=validate.Length(equal=3))
     speechiness = fields.List(fields.Number(), validate=validate.Length(equal=3))
     valence = fields.List(fields.Number(), validate=validate.Length(equal=3))
     energy = fields.List(fields.Number(), validate=validate.Length(equal=3))

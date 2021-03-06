@@ -111,24 +111,31 @@ def get_playlist_from_mood():
 
     if request.args.get('mood_id') is None: # ?mood_id = mood id string
         abort(422, description="Unprocessable entity: missing mood id")
+    resp = _get_playlist_from_mood(request.args)
+    if 'error' in resp:
+        if resp['status'] == 404:
+            return Response(status=404)
+        abort(resp['status'], description = resp['error'])
+    return jsonify(resp)
 
-    mood_id = request.args.get('mood_id')
+def _get_playlist_from_mood(args):
+    mood_id = args.get('mood_id')
 
     try:
         mood_id = int(mood_id)
     except:
-        abort(422, description="Unprocessable entity: invalid mood id")
+        return {'status':422, 'error': "Unprocessable entity: invalid mood id"}
 
     generator = MoodGenerator(None, None, None, mood_id, GetMoodFromDBWithIDStrategy)
     mood = generator.generate()
     if mood is None:
-        return Response(status = 404)
+        return {'status': 404, 'error': "Mood not found"}
     mood = mood.params
 
     get_args = {}
-    if 'limit' not in request.args:
+    if 'limit' not in args:
         get_args['limit'] = Constants.LIMIT.value
-    if 'market' not in request.args:
+    if 'market' not in args:
         get_args['market'] = Constants.MARKET.value
     for k, v in mood.items():
         # separate Spotify parameters
@@ -145,7 +152,7 @@ def get_playlist_from_mood():
         # Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
         seed_artists, top_genres = Spotify(oauth_access_token).get_top_artists_and_genres()
         if seed_artists is None:
-            abort(500, "Error in retrieving user's top artists")
+            return {'status': 500, 'error': "Error in retrieving user's top artists"}
 
         if 'seed_artists' not in get_args:
             get_args['seed_artists'] = seed_artists
@@ -156,13 +163,13 @@ def get_playlist_from_mood():
         # Reference: https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/
         top_tracks = Spotify(oauth_access_token).get_top_tracks()
         if top_tracks is None:
-            abort(500, "Error in retrieving user's top tracks")
+            return {'status': 500, 'error': "Error in retrieving user's top tracks"}
         get_args['seed_tracks'] = top_tracks
 
     recommendations = Spotify(oauth_access_token).get_recommendations(get_args)
     if recommendations is None:
-        abort(500, "Error in retrieving recommendations from Spotify")
-    return jsonify({'tracks': recommendations})
+        return {'status': 500, 'error': "Error in retrieving recommendations from Spotify"}
+    return {'tracks': recommendations}
 
 # Returns Spotify ID of queried track/artist
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-search
@@ -198,22 +205,27 @@ def get_spotify_id():
 def make_playlist():
     if not request.data:
         abort(400, description="Malformed syntax")
-
     data = json.loads(request.data.decode("utf8"))
     if 'playlist_name' not in data:
         abort(422, description="Unprocessable entity: missing playlist name")
     if 'track_uris' not in data:
         abort(422, description="Unprocessable entity: missing track URIs")
 
+    resp = _make_playlist(data)
+    if 'error' in resp:
+        abort(resp['status'], description = resp['error'])
+    return jsonify(resp)
+
+def _make_playlist(data):
     oauth_access_token = g.access_token
 
     playlist_id, playlist_uri = Spotify(oauth_access_token).make_playlist(g.user_id, data['playlist_name'])
     
     if playlist_id is None or playlist_uri is None:
-        abort(500, "Error in making playlist")
+        return {'status': 500, 'error': "Error in making playlist"}
 
     tracks_added = Spotify(oauth_access_token).add_tracks_to_playlist(data['track_uris'], playlist_id)
     if not tracks_added:
-        abort(500, "Error in adding to playlist")
+        return {'status': 500, 'error': "Error in adding to playlist"}
 
-    return jsonify({'playlist_uri': playlist_uri})
+    return {'playlist_uri': playlist_uri}
