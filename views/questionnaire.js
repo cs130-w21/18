@@ -136,7 +136,7 @@ const Questionnaire = (props) => {
           className={styles.getPlaylistBtn}
           onClick={() => props.submitResponses(responses)}
         >
-          Get my playlist!
+          Save my mood
         </Button>
       </div>
     </>

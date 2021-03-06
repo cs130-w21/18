@@ -103,12 +103,12 @@ const Home = (props) => {
             </div>
             <div className={`${styles.instructions_box} ${styles.box}`}>
               <p>
-                <b>Here's how this works:</b> Answer a few questions, and we'll
-                make you a brand new Spotify playlist based on your mood and
-                musical taste! You'll also get a mood, which you can reuse to
-                create more playlists from your responses. Or, share your moods
-                with friends so they can create their own playlists from your
-                musical mood!
+                <b>Here's how this works:</b> First create a mood by telling us
+                a bit about the music you're in the mood for. Then create a
+                playlist, and we'll make you a personalized playlist based on
+                your mood and favorite songs! We'll also save it in your Spotify
+                for later. Or, visit the explore page to check out other
+                people's popular moods!
               </p>
             </div>
           </div>
