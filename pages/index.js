@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import Home from "../views/home";
-import { fetchHomePageData, requestNewPlaylist } from "../lib/fetch";
+import {
+  fetchPlaylistsFromMood,
+  fetchUserMoods,
+  requestNewPlaylist,
+} from "../lib/fetch";
 
 /* This function handles the login for the home page. It passes information to the home page view and returns that
  * React component with the parameters filled in.
@@ -39,17 +43,44 @@ export async function getServerSideProps(context) {
   let data = {},
     error = "";
   if (username && jwt) {
-    // Request moods and playlists from the backend.
+    // Request moods from the backend.
     try {
-      const response = await fetchHomePageData(jwt);
-      console.log(JSON.stringify(response));
-      if (response.error !== "") {
-        throw response.error;
+      const moodsResponse = await fetchUserMoods(jwt);
+      if (moodsResponse.error !== "") {
+        throw moodsResponse.error;
       }
-      data = response.data;
-    } catch {
-      error =
-        "Sorry, we're having trouble accessing your playlists right now. Please try again later.";
+      // Extract the information we want to use from the response.
+      data.moods = moodsResponse.moods.map((mood) => ({
+        mood_name: mood.mood_name,
+        mood_id: mood.mood_id,
+        playlists: [],
+      }));
+      // Request playlists that go with each mood.
+      // Make all the requests in parallel.
+      await Promise.all(
+        data.moods.map(async (mood) => {
+          const playlistsResponse = await fetchPlaylistsFromMood(
+            jwt,
+            mood.mood_id
+          );
+          if (playlistsResponse.error !== "") {
+            throw playlistsResponse.error;
+          }
+          // Extract the information we want and associate the playlists with the mood.
+          mood.playlists = playlistsResponse.playlists.map((playlist) => ({
+            id: playlist.uri.replace("spotify:playlist:", ""),
+            idx: playlist.idx,
+            name: `${mood.mood_name} ${playlist.idx}`,
+          }));
+        })
+      );
+    } catch (err) {
+      if (err === "Access Token expired") {
+        error = "Your session has expired. Please log in again.";
+      } else {
+        error =
+          "Sorry, we're having trouble accessing your playlists right now. Please try again later.";
+      }
     }
   }
 
@@ -66,38 +97,50 @@ export async function getServerSideProps(context) {
 
 export default function HomeController(props) {
   const router = useRouter();
+  const [error, setError] = useState(props.error);
 
-  let error = "";
   const moods = new Map();
   // Convert moods and playlists into a map.
-  if (!props.error && props.username && props.jwt) {
+  if (!error && props.username && props.jwt) {
     try {
-      props.data.created_moods.forEach((mood) => {
+      props.data.moods.forEach((mood) => {
         moods.set(mood.mood_id, {
           name: mood.mood_name,
-          playlists: [],
+          playlists: mood.playlists,
         });
       });
-
-      // TODO: Map playlists to moods.
-      // testData.playlists.forEach((playlist) => {
-      //   if (!moods.has(playlist.mood_id)) {
-      //     // If this playlist's mood doesn't exist for whatever reason, skip it.
-      //     return;
-      //   }
-      //   moods.get(playlist.mood_id).playlists.push(playlist);
-      // });
     } catch {
-      error =
-        "Sorry, we're having trouble accessing your playlists right now. Please try again later.";
+      setError(
+        "Sorry, we're having trouble accessing your playlists right now. Please try again later."
+      );
     }
   }
 
-  const getNewPlaylist = async (moodId) => {
-    // Will get user ID, then provide mood ID and user ID in this function call
-    // TODO: Implement this function.
-    const newPlaylist = await requestNewPlaylist();
-    newPlaylist.mood_id = moodId;
+  const getNewPlaylist = async (moodID, moodName) => {
+    const { jwt } = parseCookies();
+
+    const newPlaylist = {
+      name: "",
+      id: null,
+      idx: null,
+    };
+    try {
+      const playlistResponse = await requestNewPlaylist(jwt, moodID, moodName);
+      if (playlistResponse.error !== "") {
+        throw playlistResponse.error;
+      }
+      newPlaylist.id = playlistResponse.playlist.uri.replace(
+        "spotify:playlist:",
+        ""
+      );
+      newPlaylist.idx = playlistResponse.playlist.idx;
+      newPlaylist.name = `${moodName} ${playlistResponse.playlist.idx}`;
+    } catch {
+      setError(
+        "Sorry, we couldn't make you a new playlist. Please try again later."
+      );
+    }
+
     return newPlaylist;
   };
 
@@ -113,7 +156,7 @@ export default function HomeController(props) {
           redurl.searchParams.append("scope", data.scopes);
           window.location.href = redurl.href;
         },
-        (error) => {}
+        (err) => {}
       );
   };
 
@@ -134,7 +177,7 @@ export default function HomeController(props) {
       questionnaireUrl={"/questionnaire"}
       getNewPlaylist={getNewPlaylist}
       moods={moods}
-      error={props.error || error}
+      error={error}
     />
   );
 }

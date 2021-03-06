@@ -31,12 +31,16 @@ const Home = (props) => {
   });
 
   const makeNewPlaylist = async (moodId) => {
-    let newPlaylist = await props.getNewPlaylist(moodId);
+    let moodName = moods.get(moodId).name;
+    let newPlaylist = await props.getNewPlaylist(moodId, moodName);
+    if (newPlaylist.id === null) {
+      return;
+    }
     setMoods((oldState) => {
       let playlists = cloneDeep(moods.get(moodId).playlists);
       playlists.push(newPlaylist);
       return new Map(oldState).set(moodId, {
-        name: moods.get(moodId).name,
+        name: moodName,
         playlists: playlists,
       });
     });
@@ -55,7 +59,7 @@ const Home = (props) => {
             <div className={styles.list}>
               {moods.get(openMood).playlists.map((playlist) => (
                 <PlaylistListItem
-                  key={playlist.id}
+                  key={playlist.idx}
                   name={playlist.name}
                   id={playlist.id}
                 />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Questionnaire from "../views/questionnaire";
 import { submitQuestionnaire } from "../lib/fetch";
@@ -14,15 +14,19 @@ const QuestionnaireController = (props) => {
 
     try {
       const response = await submitQuestionnaire(moodName, paramResponses);
-      // console.log("submission response: " + JSON.stringify(response));
       if (response.error !== "") {
         throw response.error;
       }
     } catch (err) {
       console.log(err);
-      setError(
-        "Sorry, we couldn't submit your responses. Please try again later."
-      );
+      if (err === "Access Token expired") {
+        setError("Your session has expired. Please log in again.");
+      } else {
+        setError(
+          "Sorry, we couldn't submit your responses. Please try again later."
+        );
+      }
+
       return;
     }
 
@@ -32,12 +36,11 @@ const QuestionnaireController = (props) => {
   const defaultSettings = {
     // attribute: [min, max, target]
     name: "moodName",
-    danceability: [0.3, 0.7, 0.5],
-    instrumentalness: [0.3, 0.7, 0.5],
-    popularity: [0.3, 0.7, 0.5],
-    speechiness: [0.3, 0.7, 0.5],
-    valence: [0.3, 0.7, 0.5],
-    energy: [0.3, 0.7, 0.5],
+    danceability: [0.0, 1.0, 0.5],
+    instrumentalness: [0.0, 1.0, 0.5],
+    speechiness: [0.0, 1.0, 0.5],
+    valence: [0.0, 1.0, 0.5],
+    energy: [0.0, 1.0, 0.5],
   };
 
   return (
