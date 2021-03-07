@@ -149,4 +149,4 @@ def get_explore_moods():
 	"""
 	generator = MoodGenerator(None, g.user_id, None, None, GetRecentMoodsFromDBStrategy)
 	recent_moods = generator.generate()
-	return jsonify(recent_moods)
+	return jsonify([{**mood.params, 'mood_id': mood.mood_id, 'creator_id': mood.creator_id, 'mood_name': mood.mood_name} for mood in recent_moods])
