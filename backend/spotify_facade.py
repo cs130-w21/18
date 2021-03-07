@@ -1,3 +1,14 @@
+"""
+Spotify Facade API
+=======================
+
+This module contains the endpoints to generate playlists based on moods. These are intermediary
+endpoints that need not be called by the front end. The functions in this module are used by
+backend.playlist to create and add playlists to users' libraries.
+All endpoints prefixed with **/api/v1/spotify** are redirected to one of these handlers.
+
+Required Header - Authorization: Bearer *jwt*
+"""
 import requests
 from enum import Enum
 from flask import Blueprint, request, abort, jsonify, Response, g
@@ -5,6 +16,7 @@ from .auth import extract_credentials
 from .mood_generator import MoodGenerator, GetMoodFromDBWithIDStrategy
 import json
 class Constants(Enum):
+    """:meta private:"""
     LIMIT = '10'
     MARKET = 'US'
     OFFSET = '0'
@@ -106,6 +118,18 @@ spotify_api.before_request(extract_credentials)
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-recommendations
 @spotify_api.route("/playlist-from-mood", methods=['GET'])
 def get_playlist_from_mood():
+    """
+        Endpoint to get a list of tracks based on a mood. This endpoint does not add the 
+        tracks to a Spotify playlist in the user's library. 
+
+        * URI path: /api/v1/spotify/playlist-from-mood
+        * Methods: GET
+        * Required Query Params:
+        
+            - **mood_id**: *Integer* - ID of mood to be used
+        
+        * Response: *JSON* - object containing playlist information provided by Spotify
+    """
     if not request.args:
         abort(400, description="Malformed syntax")
 
@@ -203,6 +227,20 @@ def get_spotify_id():
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-create-playlist
 @spotify_api.route("/make-playlist", methods=["POST"])
 def make_playlist():
+    """
+        Endpoint to add a list of tracks to a new playlist in the user's Spotify library.
+
+        * URI path: /api/v1/spotify/make-playlist
+        * Methods: POST
+        * Required Query Params:
+        
+            - **playlist_name**: *String* - name of playlist to be created
+            - **track_uris**: *Array[String]* - list of Spotify track URIs to be added to the playlist
+        
+        * Response: *JSON* - object containing
+
+            - playlist_uri: *String* - playlist URI returned by Spotify
+    """
     if not request.data:
         abort(400, description="Malformed syntax")
     data = json.loads(request.data.decode("utf8"))

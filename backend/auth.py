@@ -1,3 +1,11 @@
+"""
+Auth API
+================
+
+This module contains the endpoints for authenticating and logging in a user.
+All endpoints prefixed with **/api/v1/login** are redirected to one of these handlers.
+"""
+
 import requests
 from flask import Blueprint, request, abort, Response, jsonify, url_for, redirect, g
 from jwt import InvalidTokenError
@@ -15,6 +23,27 @@ GRANT_TYPE = 'authorization_code'
 
 @auth_api.route("/callback", methods=['GET'])
 def get_access_token():
+    """
+        Callback endpoint to authenticate a user with the backend. Spotify hits
+        this endpoint with an authorization code. The backend performs a back-and-forth
+        with Spotify to obtain an access token, a refresh token and the user's ID and 
+        display name. The browser is redirected to the URI for the front-end application
+        along with authentication credentials in the query params.
+
+        Note: This endpoint is NOT to be called by a front end application. It is only to
+        be used as Spotify's callback.
+
+        * URI path: /api/v1/login/callback
+        * Methods: GET
+        * Required Query Params:
+        
+            - **code**: *String* - Spotify authorization code
+        
+        * Response: Redirect to front end with query params:
+            
+            - jwt: *String* - jwt containing user's Spotify ID and access token
+            - username: *String* - user's Spotify display name
+    """
     if not request.args:
         print("No args provided")
         abort(400, description="Malformed syntax")
@@ -58,6 +87,17 @@ def get_access_token():
 
 @auth_api.route("/appdetails", methods=["GET"])
 def get_app_details():
+    """
+        Endpoint to provide app details required by front end to perform login.
+
+        * URI path: /api/v1/login/appdetails
+        * Methods: GET
+        * Response Body: *JSON* - object containing
+            
+            - redirect_uri: *String* - absolute URI of backend.mood.get_access_token()
+            - client_id: *String* - ID of application registered with Spotify
+            - scopes: *String* - space separated list of Spotify access scopes
+    """
     redirect_uri = os.environ['SPOTIFY_REDIRECT_URI']
     client_id = os.environ['CLIENT_ID']
     scopes = Scopes.get_all()
