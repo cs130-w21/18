@@ -17,6 +17,11 @@ import styles from "../styles/ListItem.module.css";
  * @param {MoodListItemProps} props
  */
 const MoodListItem = (props) => {
+  let displayName =
+    props.name.length > 35
+      ? props.name.substring(0, 36).concat("...")
+      : props.name;
+
   return (
     <div className={styles.item} onClick={props.setOpen}>
       <div
@@ -24,7 +29,7 @@ const MoodListItem = (props) => {
           props.selected ? "font-weight-bold" : styles.link
         }`}
       >
-        {props.name}
+        {displayName}
       </div>
     </div>
   );
