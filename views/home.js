@@ -28,7 +28,6 @@ import styles from "../styles/Home.module.css";
  * Component to display and handle home page functionality
  * @class Home
  * @param {HomeProps} props
- *
  */
 const Home = (props) => {
   const [openMood, setOpenMood] = useState(

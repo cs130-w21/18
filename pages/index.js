@@ -8,8 +8,12 @@ import {
   requestNewPlaylist,
 } from "../lib/fetch";
 
-/* This function handles the login for the home page. It passes information to the home page view and returns that
+/**
+ * This function handles the login for the home page.
+ * It passes information to the home page view and returns that
  * React component with the parameters filled in.
+ * @class Index
+ * @param {Object} context - React context
  */
 export async function getServerSideProps(context) {
   const cookies = parseCookies(context);
@@ -144,6 +148,10 @@ export default function HomeController(props) {
     return newPlaylist;
   };
 
+  /**
+   * Component logs the user in via Spotify and stores user information
+   * @memberof Index
+   */
   const loginFunction = async () => {
     fetch("https://musaic-13018.herokuapp.com/login/appdetails")
       .then((response) => response.json())
@@ -160,6 +168,10 @@ export default function HomeController(props) {
       );
   };
 
+  /**
+   * Component logs the user out and destroys cookies
+   * @memberof Index
+   */
   const logoutFunction = () => {
     // Remove cookies
     destroyCookie(null, "jwt");
