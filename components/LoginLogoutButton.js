@@ -2,6 +2,19 @@ import React from "react";
 import styles from "../styles/LoginLogoutButton.module.css";
 import { Button } from "react-bootstrap";
 
+/**
+ * @typedef LoginLogoutButtonProps
+ * @memberof LoginLogoutButton
+ * @property {Boolean} loggedIn - indicates whether a user is logged in
+ * @property {Function} loginFunction - function to process user login
+ * @property {Function} logoutFunction - function to process user logout
+ */
+
+/**
+ * Component representing a login/logout button
+ * @class LoginLogoutButton
+ * @param {LoginLogoutButtonProps} props
+ */
 const LoginLogoutButton = (props) => {
   if (props.loggedIn) {
     return (

@@ -11,6 +11,24 @@ import styles from "../styles/Home.module.css";
 
 /* Render the home page. */
 
+/**
+ * @typedef HomeProps
+ * @memberof Home
+ * @property {Boolean} loggedIn - indicates whether a user is logged in
+ * @property {String} username - user's username
+ * @property {Function} loginFunction - function to handle login
+ * @property {Function} logoutFunction - function to handle user logout
+ * @property {String} questionnaireUrl - url for questionnaire page
+ * @property {Function} getNewPlaylist - function to get a new playlist
+ * @property {Object} moods - a user's mood
+ * @property {String} error - error message
+ */
+
+/**
+ * Component to display and handle home page functionality
+ * @class Home
+ * @param {HomeProps} props
+ */
 const Home = (props) => {
   const [openMood, setOpenMood] = useState(
     props.moods.size > 0 ? props.moods.keys().next().value : null
@@ -30,18 +48,31 @@ const Home = (props) => {
     );
   });
 
+  /**
+   * Method to create a new playlist
+   * @memberof Home
+   * @param {String} moodId
+   */
   const makeNewPlaylist = async (moodId) => {
-    let newPlaylist = await props.getNewPlaylist(moodId);
+    let moodName = moods.get(moodId).name;
+    let newPlaylist = await props.getNewPlaylist(moodId, moodName);
+    if (newPlaylist.id === null) {
+      return;
+    }
     setMoods((oldState) => {
       let playlists = cloneDeep(moods.get(moodId).playlists);
       playlists.push(newPlaylist);
       return new Map(oldState).set(moodId, {
-        name: moods.get(moodId).name,
+        name: moodName,
         playlists: playlists,
       });
     });
   };
 
+  /**
+   * Method to display playlists in a box
+   * @memberof Home
+   */
   const playlistBoxContents = () => {
     if (props.loggedIn) {
       if (openMood !== null) {
@@ -55,7 +86,7 @@ const Home = (props) => {
             <div className={styles.list}>
               {moods.get(openMood).playlists.map((playlist) => (
                 <PlaylistListItem
-                  key={playlist.id}
+                  key={playlist.idx}
                   name={playlist.name}
                   id={playlist.id}
                 />
