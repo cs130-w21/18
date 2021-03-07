@@ -49,6 +49,11 @@ const Home = (props) => {
     );
   });
 
+  /**
+   * Method to create a new playlist
+   * @memberof Home
+   * @param {String} moodId
+   */
   const makeNewPlaylist = async (moodId) => {
     let moodName = moods.get(moodId).name;
     let newPlaylist = await props.getNewPlaylist(moodId, moodName);
@@ -65,6 +70,10 @@ const Home = (props) => {
     });
   };
 
+  /**
+   * Method to display playlists in a box
+   * @memberof Home
+   */
   const playlistBoxContents = () => {
     if (props.loggedIn) {
       if (openMood !== null) {
