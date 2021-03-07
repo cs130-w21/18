@@ -21,6 +21,7 @@ app.register_blueprint(user_api, url_prefix='/api/v1/user')
 
 @app.route("/")
 def hello():
+    """Returns Hello World!"""
     return "Hello World!"
 
 if __name__ == "__main__":

@@ -1,3 +1,12 @@
+"""
+Mood API
+==============
+
+This module contains the endpoints for generating and retrieving moods.
+All endpoints prefixed with **/api/v1/mood** are redirected to one of these handlers.
+
+Required Header - Authorization: Bearer *jwt*
+"""
 from flask import Blueprint, request, abort, jsonify, Response, g
 from marshmallow import exceptions
 import copy
@@ -13,6 +22,24 @@ mood_api.before_request(extract_credentials)
 # Create OR update mood (PUT request)
 @mood_api.route("/mood", methods=['PUT'])
 def create_update_custom_mood():
+	"""
+		Endpoint to create or update a mood.
+		
+		* URI path: /api/v1/mood/mood
+		* Methods: PUT
+		* Required Query Params:
+		
+			- **name**: *String* - name of the mood
+		
+		* Response Body: *JSON* - object with fields
+		
+			- instrumentalness: *Array[float]*
+			- speechiness: *Array[float]*
+			- danceability: *Array[float]*
+			- valence: *Array[float]*
+			- energy: *Array[float]*
+			- mood_id: *Integer*
+	"""
 	if not request.data or not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -55,6 +82,24 @@ def delete_custom_mood():
 # Read mood (GET request)
 @mood_api.route("/mood", methods=['GET'])
 def get_custom_mood():
+	"""
+		Endpoint to get mood by mood name.
+		
+		* URI path: /api/v1/mood/mood
+		* Methods: GET
+		* Required Query Params:
+		
+			- **name**: *String* - name of the mood
+		
+		* Response Body: *JSON* - object with fields
+		
+			- instrumentalness: *Array[float]*
+			- speechiness: *Array[float]*
+			- danceability: *Array[float]*
+			- valence: *Array[float]*
+			- energy: *Array[float]*
+			- mood_id: *Integer*
+	"""
 	if not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -73,6 +118,19 @@ def get_custom_mood():
 # Get most recent moods from other users for Explore page (GET request)
 @mood_api.route("/recent-moods", methods=["GET"])
 def get_explore_moods():
+	"""
+		Endpoint to get moods for the user to explore.
+		
+		* URI path: /api/v1/mood/recent-moods
+		* Methods: GET
+		* Required Query Params:
+		
+			- **name**: *String* - name of the mood
+		
+		* Response Body: *JSON* - list of moods, each containing
+			
+			- TODO
+	"""
 	generator = MoodGenerator(None, g.user_id, None, None, GetRecentMoodsFromDBStrategy)
 	recent_moods = generator.generate()
 	return jsonify(recent_moods)

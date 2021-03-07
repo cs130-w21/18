@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Musaic’s documentation! &#8212; Musaic  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-musaic-s-documentation">
+<h1>Welcome to Musaic’s documentation!<a class="headerlink" href="#welcome-to-musaic-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-backend.mood"></span><div class="section" id="mood-api">
+<h2>Mood API<a class="headerlink" href="#mood-api" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the endpoints for generating and retrieving moods.
+All endpoints prefixed with <strong>/api/v1/mood</strong> are redirected to one of these handlers.</p>
+<p>Required Header - Authorization: Bearer <em>jwt</em></p>
+<dl class="py function">
+<dt id="backend.mood.create_update_custom_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.mood.</span></code><code class="sig-name descname"><span class="pre">create_update_custom_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.mood.create_update_custom_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to create or update a mood.</p>
+<ul>
+<li><p>URI path: /api/v1/mood/mood</p></li>
+<li><p>Methods: PUT</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>name</strong>: <em>String</em> - name of the mood</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> - object with fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>instrumentalness: <em>Array[float]</em></p></li>
+<li><p>speechiness: <em>Array[float]</em></p></li>
+<li><p>danceability: <em>Array[float]</em></p></li>
+<li><p>valence: <em>Array[float]</em></p></li>
+<li><p>energy: <em>Array[float]</em></p></li>
+<li><p>mood_id: <em>Integer</em></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.mood.get_custom_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.mood.</span></code><code class="sig-name descname"><span class="pre">get_custom_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.mood.get_custom_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get mood by mood name.</p>
+<ul>
+<li><p>URI path: /api/v1/mood/mood</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>name</strong>: <em>String</em> - name of the mood</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> - object with fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>instrumentalness: <em>Array[float]</em></p></li>
+<li><p>speechiness: <em>Array[float]</em></p></li>
+<li><p>danceability: <em>Array[float]</em></p></li>
+<li><p>valence: <em>Array[float]</em></p></li>
+<li><p>energy: <em>Array[float]</em></p></li>
+<li><p>mood_id: <em>Integer</em></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.mood.get_explore_moods">
+<code class="sig-prename descclassname"><span class="pre">backend.mood.</span></code><code class="sig-name descname"><span class="pre">get_explore_moods</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.mood.get_explore_moods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get moods for the user to explore.</p>
+<ul>
+<li><p>URI path: /api/v1/mood/recent-moods</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>name</strong>: <em>String</em> - name of the mood</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> - list of moods, each containing</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>TODO</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<span class="target" id="module-backend.playlist"></span><div class="section" id="playlist-api">
+<h2>Playlist API<a class="headerlink" href="#playlist-api" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the endpoints for generating playlists based on moods.
+All endpoints prefixed with <strong>/api/v1/playlist</strong> are redirected to one of these handlers.</p>
+<p>Required Header - Authorization: Bearer <em>jwt</em></p>
+<dl class="py function">
+<dt id="backend.playlist.get_playlist_from_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.playlist.</span></code><code class="sig-name descname"><span class="pre">get_playlist_from_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.playlist.get_playlist_from_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to create a playlist based on a mood. If songs matching the parameters are found,
+a playlist named “<em>mood_name</em> <em>mood_id</em>” is added to a user’s Spotify library.</p>
+<ul>
+<li><p>URI path: /api/v1/playlist/playlist-from-mood</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mood_id</strong>: <em>Integer</em> - ID of mood to be used</p></li>
+<li><p><strong>mood_name</strong>: <em>String</em> - name of mood to be used</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> - object with fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uri: <em>String</em> - URI of playlist generated by Spotify</p></li>
+<li><p>mood_id: <em>Integer</em> - ID of Mood associated with playlist</p></li>
+<li><p>idx: <em>Integer</em> - Index of the playlist for specific mood</p></li>
+<li><p>tracks: <em>JSON</em> - Object containing tracks and metadata sent by Spotify</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.playlist.get_playlists">
+<code class="sig-prename descclassname"><span class="pre">backend.playlist.</span></code><code class="sig-name descname"><span class="pre">get_playlists</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.playlist.get_playlists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get playlists associated with a mood.</p>
+<ul>
+<li><p>URI path: /api/v1/playlist/playlists</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mood_id</strong>: <em>Integer</em> - ID of mood to be used</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> -  list of objects, each with fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uri: <em>String</em> - URI of playlist generated by Spotify</p></li>
+<li><p>mood_id: <em>Integer</em> - ID of Mood associated with playlist</p></li>
+<li><p>idx: <em>Integer</em> - Index of the playlist for specific mood</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<span class="target" id="module-backend.auth"></span><div class="section" id="auth-api">
+<h2>Auth API<a class="headerlink" href="#auth-api" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the endpoints for authenticating and logging in a user.
+All endpoints prefixed with <strong>/api/v1/login</strong> are redirected to one of these handlers.</p>
+<dl class="py function">
+<dt id="backend.auth.get_access_token">
+<code class="sig-prename descclassname"><span class="pre">backend.auth.</span></code><code class="sig-name descname"><span class="pre">get_access_token</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.auth.get_access_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback endpoint to authenticate a user with the backend. Spotify hits
+this endpoint with an authorization code. The backend performs a back-and-forth
+with Spotify to obtain an access token, a refresh token and the user’s ID and 
+display name. The browser is redirected to the URI for the front-end application
+along with authentication credentials in the query params.</p>
+<p>Note: This endpoint is NOT to be called by a front end application. It is only to
+be used as Spotify’s callback.</p>
+<ul>
+<li><p>URI path: /api/v1/login/callback</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>code</strong>: <em>String</em> - Spotify authorization code</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response: Redirect to front end with query params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>jwt: <em>String</em> - jwt containing user’s Spotify ID and access token</p></li>
+<li><p>username: <em>String</em> - user’s Spotify display name</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.auth.get_app_details">
+<code class="sig-prename descclassname"><span class="pre">backend.auth.</span></code><code class="sig-name descname"><span class="pre">get_app_details</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.auth.get_app_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to provide app details required by front end to perform login.</p>
+<ul>
+<li><p>URI path: /api/v1/login/appdetails</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Response Body: <em>JSON</em> - object containing</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>redirect_uri: <em>String</em> - absolute URI of backend.mood.get_access_token()</p></li>
+<li><p>client_id: <em>String</em> - ID of application registered with Spotify</p></li>
+<li><p>scopes: <em>String</em> - space separated list of Spotify access scopes</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<span class="target" id="module-backend.spotify_facade"></span><div class="section" id="spotify-facade-api">
+<h2>Spotify Facade API<a class="headerlink" href="#spotify-facade-api" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the endpoints to generate playlists based on moods. These are intermediary
+endpoints that need not be called by the front end. The functions in this module are used by
+backend.playlist to create and add playlists to users’ libraries.
+All endpoints prefixed with <strong>/api/v1/spotify</strong> are redirected to one of these handlers.</p>
+<p>Required Header - Authorization: Bearer <em>jwt</em></p>
+<dl class="py function">
+<dt id="backend.spotify_facade.get_playlist_from_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.spotify_facade.</span></code><code class="sig-name descname"><span class="pre">get_playlist_from_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.spotify_facade.get_playlist_from_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get a list of tracks based on a mood. This endpoint does not add the 
+tracks to a Spotify playlist in the user’s library.</p>
+<ul>
+<li><p>URI path: /api/v1/spotify/playlist-from-mood</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mood_id</strong>: <em>Integer</em> - ID of mood to be used</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response: <em>JSON</em> - object containing playlist information provided by Spotify</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.spotify_facade.make_playlist">
+<code class="sig-prename descclassname"><span class="pre">backend.spotify_facade.</span></code><code class="sig-name descname"><span class="pre">make_playlist</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.spotify_facade.make_playlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to add a list of tracks to a new playlist in the user’s Spotify library.</p>
+<ul>
+<li><p>URI path: /api/v1/spotify/make-playlist</p></li>
+<li><p>Methods: POST</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>playlist_name</strong>: <em>String</em> - name of playlist to be created</p></li>
+<li><p><strong>track_uris</strong>: <em>Array[String]</em> - list of Spotify track URIs to be added to the playlist</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response: <em>JSON</em> - object containing</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>playlist_uri: <em>String</em> - playlist URI returned by Spotify</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+<span class="target" id="module-backend.user"></span><div class="section" id="user-api">
+<h2>User API<a class="headerlink" href="#user-api" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the endpoints to user data such as moods and playlists of a user.
+All endpoints prefixed with <strong>/api/v1/user</strong> are redirected to one of these handlers.</p>
+<p>Required Header - Authorization: Bearer <em>jwt</em></p>
+<dl class="py function">
+<dt id="backend.user.add_external_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.user.</span></code><code class="sig-name descname"><span class="pre">add_external_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.user.add_external_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to add a mood not created by the user to their account.</p>
+<ul>
+<li><p>URI path: /api/v1/user/external_mood</p></li>
+<li><p>Methods: PUT</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>mood_id: <em>Integer</em> - ID of mood to be added</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response: <em>empty</em></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.user.get_user_moods">
+<code class="sig-prename descclassname"><span class="pre">backend.user.</span></code><code class="sig-name descname"><span class="pre">get_user_moods</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.user.get_user_moods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get a list of moods either created or liked by the user.</p>
+<ul>
+<li><p>URI path: /api/v1/user/moods</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Response: <em>JSON</em> - object containing</p>
+<blockquote>
+<div><ul>
+<li><p>created_moods: <em>JSON</em> - list of mood objects (see next item for schema)</p></li>
+<li><p>external_moods: <em>JSON</em> - list of mood objects, each containing</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>mood_id: <em>String</em> - ID of mood</p></li>
+<li><p>mood_name: <em>String</em> - name of mood</p></li>
+<li><p>params: <em>JSON</em> - parameters of mood (danceability, speechiness, instrumentalness, valence, energy)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Musaic</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, CS130.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
