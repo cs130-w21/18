@@ -14,7 +14,7 @@ import styles from "../styles/Home.module.css";
 /**
  * @typedef HomeProps
  * @memberof Home
- * @property {boolean} loggedIn - indicates whether a user is logged in
+ * @property {Boolean} loggedIn - indicates whether a user is logged in
  * @property {String} username - user's username
  * @property {Function} loginFunction - function to handle login
  * @property {Function} logoutFunction - function to handle user logout
