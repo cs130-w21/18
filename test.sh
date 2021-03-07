@@ -5,20 +5,23 @@ export FRONT_END_URI='https://test-fe-130.herokuapp.com'
 export JWT_SECRET='psst...idontlikeshawnmendez...sshhh'
 export SPOTIFY_REDIRECT_URI='https://musaic-13018.herokuapp.com/login/callback'
 ENV=${1:-0}
-echo $ENV
 tmp_dir=$(mktemp -d)
 if [ $ENV -eq 0 ]
 then
-    echo "0 env = ${ENV}"
+    echo "Creating virtual environment for Python dependencies"
     python3 -m venv $tmp_dir
     . "${tmp_dir}/bin/activate"
+    echo "Installing Python dependencies"
     pip install -r requirements.txt
 else
-    echo "1 env = ${ENV}"
+    echo "Activating existing Python venv"
     . "${ENV}/bin/activate"
 fi
+echo "Starting server"
 gunicorn main:app &
+echo "Server running"
 SERVER_PID=$!
+echo "Running Tests"
 pytest
 kill $SERVER_PID
 deactivate

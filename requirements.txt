@@ -23,6 +23,7 @@ Pygments==2.8.0
 PyJWT==2.0.1
 pyparsing==2.4.7
 pytest==6.2.2
+pytest-dependency==0.5.1
 pytz==2021.1
 requests==2.25.1
 six==1.15.0
