@@ -4,6 +4,31 @@ import Questionnaire from "../views/questionnaire";
 import { submitQuestionnaire } from "../lib/fetch";
 var _ = require("lodash");
 
+/**
+ * @typedef QuestionnaireSettings
+ * @memberof QuestionnaireController
+ * @property {String} name - mood name
+ * @property {number[]} danceability - danceability min, max, target
+ * @property {number[]} instrumentalness - instrumentalness min, max, target
+ * @property {number[]} speechiness - speechiness min, max, target
+ * @property {number[]} valence - positivity measure min, max, target
+ * @property {number[]} energy - energy min, max, target
+ */
+const defaultSettings = {
+  // attribute: [min, max, target]
+  name: "moodName",
+  danceability: [0.0, 1.0, 0.5],
+  instrumentalness: [0.0, 1.0, 0.5],
+  speechiness: [0.0, 1.0, 0.5],
+  valence: [0.0, 1.0, 0.5],
+  energy: [0.0, 1.0, 0.5],
+};
+
+/**
+ * Component to handle processing of user input
+ * @class QuestionnaireController
+ * @param {*} props
+ */
 const QuestionnaireController = (props) => {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -31,16 +56,6 @@ const QuestionnaireController = (props) => {
     }
 
     router.push("/");
-  };
-
-  const defaultSettings = {
-    // attribute: [min, max, target]
-    name: "moodName",
-    danceability: [0.0, 1.0, 0.5],
-    instrumentalness: [0.0, 1.0, 0.5],
-    speechiness: [0.0, 1.0, 0.5],
-    valence: [0.0, 1.0, 0.5],
-    energy: [0.0, 1.0, 0.5],
   };
 
   return (
