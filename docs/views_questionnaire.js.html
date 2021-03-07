@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: views/questionnaire.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: views/questionnaire.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import { Alert, Button, Form } from "react-bootstrap";
+import PageHead from "../components/head";
+import styles from "../styles/Questionnaire.module.css";
+
+/**
+ * @typedef QuestionnaireProps
+ * @memberof Questionnaire
+ * @property {QuestionnaireSettings} defaultSettings - default settings for response state
+ * @property {String} error - error message
+ * @property {Function} submitResponses - function to submit responses
+ */
+
+/**
+ * Component for user to fill out questionnaire
+ * @class Questionnaire
+ * @param {QuestionnaireProps} props
+ */
+const Questionnaire = (props) => {
+  const [responses, setResponses] = useState(props.defaultSettings);
+
+  const handleChange = (e) => {
+    setResponses((prevResponses) => ({
+      ...prevResponses,
+      [e.target.id]: [0.0, 1.0, parseFloat(e.target.value)],
+    }));
+  };
+
+  return (
+    &lt;>
+      &lt;PageHead />
+      {props.error !== "" ? (
+        &lt;Alert
+          variant="primary"
+          className="justify-content-md-center w-50 mx-auto mb-0"
+        >
+          {props.error}
+        &lt;/Alert>
+      ) : (
+        ""
+      )}
+      &lt;div className={styles.formContainer}>
+        &lt;Form>
+          &lt;div className={styles.title}>
+            Tell us what kind of music you're in the mood for!
+          &lt;/div>
+          &lt;Form.Group controlId="name">
+            &lt;div className={styles.moodNameContainer}>
+              &lt;Form.Label className={styles.formText}>
+                Name your mood
+              &lt;/Form.Label>
+              &lt;Form.Control
+                className={styles.inputBox}
+                type="text"
+                onChange={(e) =>
+                  setResponses((prevResponses) => ({
+                    ...prevResponses,
+                    name: e.target.value,
+                  }))
+                }
+              />
+            &lt;/div>
+          &lt;/Form.Group>
+          &lt;Form.Group controlId="danceability">
+            &lt;Form.Label className={styles.formText}>Danceability&lt;/Form.Label>
+            &lt;Form.Control
+              type="range"
+              className={styles.slider}
+              min="0.0"
+              max="1.0"
+              step="0.01"
+              defaultValue="0.5"
+              onChange={(e) => handleChange(e)}
+            />
+          &lt;/Form.Group>
+          &lt;Form.Group controlId="instrumentalness">
+            &lt;Form.Label className={styles.formText}>
+              Instrumentalness
+            &lt;/Form.Label>
+            &lt;Form.Control
+              type="range"
+              className="form-range"
+              min="0.0"
+              max="1.0"
+              step="0.01"
+              defaultValue="0.5"
+              onChange={(e) => handleChange(e)}
+            />
+          &lt;/Form.Group>
+          &lt;Form.Group controlId="speechiness">
+            &lt;Form.Label className={styles.formText}>Speechiness&lt;/Form.Label>
+            &lt;Form.Control
+              type="range"
+              className="form-range"
+              min="0.0"
+              max="1.0"
+              step="0.01"
+              defaultValue="0.5"
+              onChange={(e) => handleChange(e)}
+            />
+          &lt;/Form.Group>
+          &lt;Form.Group controlId="valence">
+            &lt;Form.Label className={styles.formText}>Valence&lt;/Form.Label>
+            &lt;Form.Control
+              type="range"
+              className="form-range"
+              min="0.0"
+              max="1.0"
+              step="0.01"
+              defaultValue="0.5"
+              onChange={(e) => handleChange(e)}
+            />
+          &lt;/Form.Group>
+          &lt;Form.Group controlId="energy">
+            &lt;Form.Label className={styles.formText}>Energy&lt;/Form.Label>
+            &lt;Form.Control
+              type="range"
+              className="form-range"
+              min="0.0"
+              max="1.0"
+              step="0.01"
+              defaultValue="0.5"
+              onChange={(e) => handleChange(e)}
+            />
+          &lt;/Form.Group>
+        &lt;/Form>
+        &lt;Button
+          className={styles.getPlaylistBtn}
+          onClick={() => props.submitResponses(responses)}
+        >
+          Get my playlist!
+        &lt;/Button>
+      &lt;/div>
+    &lt;/>
+  );
+};
+
+export default Questionnaire;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Queries.html">Queries</a></li></ul><h3>Classes</h3><ul><li><a href="Home.html">Home</a></li><li><a href="Index_.html">Index</a></li><li><a href="LoginLogoutButton.html">LoginLogoutButton</a></li><li><a href="MoodListItem.html">MoodListItem</a></li><li><a href="MusaicHeader.html">MusaicHeader</a></li><li><a href="NewMoodButton.html">NewMoodButton</a></li><li><a href="NewPlaylistButton.html">NewPlaylistButton</a></li><li><a href="PageHead.html">PageHead</a></li><li><a href="Playlist.html">Playlist</a></li><li><a href="Questionnaire.html">Questionnaire</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Mar 07 2021 01:01:34 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/fetch.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/fetch.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { parseCookies } from "nookies";
+
+const axios = require("axios");
+
+// This file handles all API calls and exports simple functions for accessing backend data.
+
+var baseURL = "https://musaic-13018.herokuapp.com/api/v1";
+/**
+ * @module Queries
+ */
+
+/**
+ * This function requests a new playlist from the backend
+ * @param {String} jwt - JSON Web Token
+ * @param {String} moodID - mood identifier
+ * @param {String} moodName - a mood's name
+ */
+export async function requestNewPlaylist(jwt, moodID, moodName) {
+  // Request a new playlist for this user and a given mood.
+  const data = {
+    error: "",
+    playlist: null,
+  };
+  try {
+    let response = await axios.get(
+      `${baseURL}/playlist/playlist-from-mood?mood_id=${moodID}&amp;mood_name=${moodName}`,
+      { headers: { Authorization: `Bearer ${jwt}` } }
+    );
+    // console.log(response);
+    if (response.data.error) {
+      throw response.data.error;
+    } else if (response.status != 200) {
+      throw response.statusText;
+    } else if (response.data.mood_id &amp;&amp; response.data.mood_id != moodID) {
+      throw "Wrong mood id returned";
+    }
+    data.playlist = response.data;
+  } catch (error) {
+    // console.log(error);
+    data.error = error;
+  }
+  return data;
+}
+
+/**
+ * This function fetches playlists associated with a given mood
+ * @memberof Fetch
+ * @param {String} jwt - JSON Web Token
+ * @param {String} moodID - mood identifier
+ */
+export async function fetchPlaylistsFromMood(jwt, moodID) {
+  const data = {
+    error: "",
+    playlists: null,
+  };
+  try {
+    let response = await axios.get(
+      `${baseURL}/playlist/playlists?mood_id=${moodID}`,
+      { headers: { Authorization: `Bearer ${jwt}` } }
+    );
+    if (response.data.error) {
+      throw response.data.error;
+    } else if (response.status != 200) {
+      throw response.statusText;
+    } else if (response.data.mood_id &amp;&amp; response.data.mood_id != moodID) {
+      throw "Wrong mood ID returned";
+    }
+    data.playlists = response.data;
+  } catch (error) {
+    data.error = error;
+  }
+  return data;
+}
+
+/**
+ * This function fetches any moods belonging to this user from the backend
+ * @param {String} jwt - JSON Web Token
+ */
+export async function fetchUserMoods(jwt) {
+  const data = {
+    error: "",
+    moods: null,
+  };
+  // Request all moods belonging to this user.
+  try {
+    const response = await axios.get(`${baseURL}/user/moods`, {
+      headers: { Authorization: `Bearer ${jwt}` },
+    });
+    // console.log("response.data" + JSON.stringify(response.data))
+    if (response.data.error) {
+      throw response.data.error;
+    } else if (response.status != 200) {
+      throw response.statusText;
+    }
+
+    data.moods = response.data.created_moods;
+    // Combine created_moods and external_moods, avoiding duplicates.
+    response.data.external_moods.forEach((e_mood) => {
+      if (
+        !response.data.created_moods.some(
+          (c_mood) => c_mood.mood_id === e_mood.mood_id
+        )
+      ) {
+        data.moods.push(e_mood);
+      }
+    });
+  } catch (error) {
+    // console.log(error)
+    data.error = error;
+  }
+  return data;
+}
+
+/**
+ * This function puts user information from the questionnaire to the backend
+ * @param {String} moodName - a mood's name
+ * @param {Object} responses - user's responses from the questionnaire excluding moodName
+ */
+export async function submitQuestionnaire(moodName, responses) {
+  // Make PUT request to send questionnaire responses to the backend
+  const cookies = parseCookies();
+  // console.log("cookies: " + JSON.stringify(cookies))
+  // console.log("submitting these responses: " + JSON.stringify(responses))
+
+  const data = {
+    error: "",
+    data: null,
+  };
+  try {
+    const response = await axios.put(
+      `${baseURL}/mood/mood?name=${moodName}`,
+      responses,
+      { headers: { Authorization: `Bearer ${cookies.jwt}` } }
+    );
+    // console.log(response.status)
+    // console.log(response.data)
+    if (response.data.error) {
+      throw response.data.error;
+    } else if (response.status != 200) {
+      throw response.statusText;
+    }
+    data.data = response.data;
+  } catch (error) {
+    data.error = error;
+  }
+
+  return data;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Queries.html">Queries</a></li></ul><h3>Classes</h3><ul><li><a href="Home.html">Home</a></li><li><a href="Index_.html">Index</a></li><li><a href="LoginLogoutButton.html">LoginLogoutButton</a></li><li><a href="MoodListItem.html">MoodListItem</a></li><li><a href="MusaicHeader.html">MusaicHeader</a></li><li><a href="NewMoodButton.html">NewMoodButton</a></li><li><a href="NewPlaylistButton.html">NewPlaylistButton</a></li><li><a href="PageHead.html">PageHead</a></li><li><a href="Playlist.html">Playlist</a></li><li><a href="Questionnaire.html">Questionnaire</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Mar 07 2021 01:01:34 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
