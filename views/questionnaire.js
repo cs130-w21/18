@@ -7,18 +7,9 @@ const Questionnaire = (props) => {
   const [responses, setResponses] = useState(props.defaultSettings);
 
   const handleChange = (e) => {
-    var min = parseFloat((parseFloat(e.target.value) - 0.2).toFixed(2));
-    if (min < 0.0) {
-      min = 0.0;
-    }
-    var max = parseFloat((parseFloat(e.target.value) + 0.2).toFixed(2));
-    if (max > 1.0) {
-      max = 1.0;
-    }
-
     setResponses((prevResponses) => ({
       ...prevResponses,
-      [e.target.id]: [min, max, parseFloat(e.target.value)],
+      [e.target.id]: [0.0, 1.0, parseFloat(e.target.value)],
     }));
   };
 
@@ -73,18 +64,6 @@ const Questionnaire = (props) => {
             <Form.Label className={styles.formText}>
               Instrumentalness
             </Form.Label>
-            <Form.Control
-              type="range"
-              className="form-range"
-              min="0.0"
-              max="1.0"
-              step="0.01"
-              defaultValue="0.5"
-              onChange={(e) => handleChange(e)}
-            />
-          </Form.Group>
-          <Form.Group controlId="popularity">
-            <Form.Label className={styles.formText}>Popularity</Form.Label>
             <Form.Control
               type="range"
               className="form-range"
