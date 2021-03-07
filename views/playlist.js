@@ -3,6 +3,10 @@ import PageHead from "../components/head";
 import styles from "../styles/playlist.module.css";
 import { useRouter } from "next/router";
 
+/**
+ * Component to display playlist
+ * @class Playlist
+ */
 const Playlist = () => {
   const router = useRouter();
   const { playlist } = router.query;

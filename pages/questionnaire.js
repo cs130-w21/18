@@ -6,7 +6,7 @@ var _ = require("lodash");
 
 /**
  * @typedef QuestionnaireSettings
- * @memberof QuestionnaireController
+ * @memberof Questionnaire
  * @property {String} name - mood name
  * @property {number[]} danceability - danceability min, max, target
  * @property {number[]} instrumentalness - instrumentalness min, max, target
@@ -26,7 +26,7 @@ const defaultSettings = {
 
 /**
  * Component to handle processing of user input
- * @class QuestionnaireController
+ * @memberof Questionnaire
  * @param {*} props
  */
 const QuestionnaireController = (props) => {
