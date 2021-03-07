@@ -3,6 +3,19 @@ import { Alert, Button, Form } from "react-bootstrap";
 import PageHead from "../components/head";
 import styles from "../styles/Questionnaire.module.css";
 
+/**
+ * @typedef QuestionnaireProps
+ * @memberof Questionnaire
+ * @property {QuestionnaireSettings} defaultSettings - default settings for response state
+ * @property {String} error - error message
+ * @property {Function} submitResponses - function to submit responses
+ */
+
+/**
+ * Component for user to fill out questionnaire
+ * @class Questionnaire
+ * @param {QuestionnaireProps} props
+ */
 const Questionnaire = (props) => {
   const [responses, setResponses] = useState(props.defaultSettings);
 

@@ -1,4 +1,32 @@
-import React, { useState } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: views/home.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: views/home.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
 import { cloneDeep } from "lodash";
 import Alert from "react-bootstrap/Alert";
 import PageHead from "../components/head";
@@ -14,7 +42,7 @@ import styles from "../styles/Home.module.css";
 /**
  * @typedef HomeProps
  * @memberof Home
- * @property {Boolean} loggedIn - indicates whether a user is logged in
+ * @property {boolean} loggedIn - indicates whether a user is logged in
  * @property {String} username - user's username
  * @property {Function} loginFunction - function to handle login
  * @property {Function} logoutFunction - function to handle user logout
@@ -38,7 +66,7 @@ const Home = (props) => {
   const moodListItems = [];
   moods.forEach((mood, id) => {
     moodListItems.push(
-      <MoodListItem
+      &lt;MoodListItem
         name={mood.name}
         id={id}
         key={id}
@@ -78,28 +106,28 @@ const Home = (props) => {
       if (openMood !== null) {
         // User is logged in and a mood is selected
         return (
-          <>
-            <NewPlaylistButton
+          &lt;>
+            &lt;NewPlaylistButton
               mood={openMood}
               getNewPlaylist={() => makeNewPlaylist(openMood)}
             />
-            <div className={styles.list}>
+            &lt;div className={styles.list}>
               {moods.get(openMood).playlists.map((playlist) => (
-                <PlaylistListItem
+                &lt;PlaylistListItem
                   key={playlist.idx}
                   name={playlist.name}
                   id={playlist.id}
                 />
               ))}
-            </div>
-          </>
+            &lt;/div>
+          &lt;/>
         );
       } else {
         // Logged in, but user has no moods
         return (
-          <div className={styles.list}>
+          &lt;div className={styles.list}>
             Create a mood to get your first custom playlist!
-          </div>
+          &lt;/div>
         );
       }
     } else {
@@ -109,63 +137,86 @@ const Home = (props) => {
   };
 
   return (
-    <>
-      <PageHead />
-      <div className="page_container">
-        <MusaicHeader
+    &lt;>
+      &lt;PageHead />
+      &lt;div className="page_container">
+        &lt;MusaicHeader
           loggedIn={props.loggedIn}
           loginFunction={props.loginFunction}
           logoutFunction={props.logoutFunction}
         />
         {props.error !== "" ? (
-          <Alert
+          &lt;Alert
             variant="primary"
             className="justify-content-md-center w-50 mx-auto mb-0"
           >
             {props.error}
-          </Alert>
+          &lt;/Alert>
         ) : (
           ""
         )}
-        <div className={styles.big_flex_container}>
-          <div className={`${styles.row} ${styles.row_1}`}>
-            <div className={`${styles.intro_box} ${styles.box}`}>
+        &lt;div className={styles.big_flex_container}>
+          &lt;div className={`${styles.row} ${styles.row_1}`}>
+            &lt;div className={`${styles.intro_box} ${styles.box}`}>
               {props.username ? `Welcome, ${props.username}!` : "Welcome!"}
-            </div>
-            <div className={`${styles.instructions_box} ${styles.box}`}>
-              <p>
-                <b>Here's how this works:</b> Answer a few questions, and we'll
+            &lt;/div>
+            &lt;div className={`${styles.instructions_box} ${styles.box}`}>
+              &lt;p>
+                &lt;b>Here's how this works:&lt;/b> Answer a few questions, and we'll
                 make you a brand new Spotify playlist based on your mood and
                 musical taste! You'll also get a mood, which you can reuse to
                 create more playlists from your responses. Or, share your moods
                 with friends so they can create their own playlists from your
                 musical mood!
-              </p>
-            </div>
-          </div>
-          <div className={`${styles.row} ${styles.row_2}`}>
-            <div
+              &lt;/p>
+            &lt;/div>
+          &lt;/div>
+          &lt;div className={`${styles.row} ${styles.row_2}`}>
+            &lt;div
               className={`${styles.playlists_box} ${styles.box} ${styles.bottom_box}`}
             >
-              <div className={styles.lower_box_text}>Your Moods</div>
+              &lt;div className={styles.lower_box_text}>Your Moods&lt;/div>
               {props.loggedIn ? (
-                <>
-                  <NewMoodButton questionnaireUrl={props.questionnaireUrl} />
-                  <div className={styles.list}>{moodListItems}</div>
-                </>
+                &lt;>
+                  &lt;NewMoodButton questionnaireUrl={props.questionnaireUrl} />
+                  &lt;div className={styles.list}>{moodListItems}&lt;/div>
+                &lt;/>
               ) : (
                 "Log in with Spotify to create your first mood!"
               )}
-            </div>
-            <div className={`${styles.bottom_box} ${styles.box}`}>
-              <div className={styles.lower_box_text}>Your Playlists</div>
+            &lt;/div>
+            &lt;div className={`${styles.bottom_box} ${styles.box}`}>
+              &lt;div className={styles.lower_box_text}>Your Playlists&lt;/div>
               {playlistBoxContents()}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    &lt;/>
   );
 };
 
 export default Home;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Queries.html">Queries</a></li></ul><h3>Classes</h3><ul><li><a href="Home.html">Home</a></li><li><a href="Index_.html">Index</a></li><li><a href="LoginLogoutButton.html">LoginLogoutButton</a></li><li><a href="MoodListItem.html">MoodListItem</a></li><li><a href="MusaicHeader.html">MusaicHeader</a></li><li><a href="NewMoodButton.html">NewMoodButton</a></li><li><a href="NewPlaylistButton.html">NewPlaylistButton</a></li><li><a href="PageHead.html">PageHead</a></li><li><a href="Playlist.html">Playlist</a></li><li><a href="Questionnaire.html">Questionnaire</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun Mar 07 2021 01:01:34 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
