@@ -11,6 +11,25 @@ import styles from "../styles/Home.module.css";
 
 /* Render the home page. */
 
+/**
+ * @typedef HomeProps
+ * @memberof Home
+ * @property {boolean} loggedIn - indicates whether a user is logged in
+ * @property {String} username - user's username
+ * @property {Function} loginFunction - function to handle login
+ * @property {Function} logoutFunction - function to handle user logout
+ * @property {String} questionnaireUrl - url for questionnaire page
+ * @property {Function} getNewPlaylist - function to get a new playlist
+ * @property {Object} moods - a user's mood
+ * @property {String} error - error message
+ */
+
+/**
+ * Component to display and handle home page functionality
+ * @class Home
+ * @param {HomeProps} props
+ *
+ */
 const Home = (props) => {
   const [openMood, setOpenMood] = useState(
     props.moods.size > 0 ? props.moods.keys().next().value : null
