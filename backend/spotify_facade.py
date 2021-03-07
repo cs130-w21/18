@@ -199,6 +199,18 @@ def _get_playlist_from_mood(args):
 # Reference: https://developer.spotify.com/documentation/web-api/reference/#endpoint-search
 @spotify_api.route("/search", methods=['GET'])
 def get_spotify_id():
+    """
+        Endpoint to get Spotify ID of queried track/artist.
+
+        * URI path: /api/v1/spotify/search
+        * Methods: GET
+        * Required Query Params:
+        
+            - **query**: *String* - terms to search for
+            - **type**: *String* - artist or track
+        
+        * Response: *JSON* - object containing information provided by Spotify
+    """
     if not request.args:
         abort(400, description="Malformed syntax")
 

@@ -64,6 +64,24 @@ def create_update_custom_mood():
 # Delete mood (DELETE request)
 @mood_api.route("/mood", methods=['DELETE'])
 def delete_custom_mood():
+	"""
+		Endpoint to delete mood by mood name.
+		
+		* URI path: /api/v1/mood/mood
+		* Methods: DELETE
+		* Required Query Params:
+		
+			- **name**: *String* - name of the mood
+		
+		* Response Body: *JSON* - object with fields (if mood was found in database, empty response otherwise)
+		
+			- instrumentalness: *Array[float]*
+			- speechiness: *Array[float]*
+			- danceability: *Array[float]*
+			- valence: *Array[float]*
+			- energy: *Array[float]*
+			- mood_id: *Integer*
+	"""
 	if not request.args:
 		abort(400, description="Malformed syntax")
 
@@ -127,9 +145,7 @@ def get_explore_moods():
 		
 			- **name**: *String* - name of the mood
 		
-		* Response Body: *JSON* - list of moods, each containing
-			
-			- TODO
+		* Response Body: *JSON* - list of moods, each containing mood_id, params, etc.
 	"""
 	generator = MoodGenerator(None, g.user_id, None, None, GetRecentMoodsFromDBStrategy)
 	recent_moods = generator.generate()

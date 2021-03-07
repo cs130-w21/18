@@ -69,6 +69,35 @@ All endpoints prefixed with <strong>/api/v1/mood</strong> are redirected to one 
 </dd></dl>
 
 <dl class="py function">
+<dt id="backend.mood.delete_custom_mood">
+<code class="sig-prename descclassname"><span class="pre">backend.mood.</span></code><code class="sig-name descname"><span class="pre">delete_custom_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.mood.delete_custom_mood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to delete mood by mood name.</p>
+<ul>
+<li><p>URI path: /api/v1/mood/mood</p></li>
+<li><p>Methods: DELETE</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>name</strong>: <em>String</em> - name of the mood</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response Body: <em>JSON</em> - object with fields (if mood was found in database, empty response otherwise)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>instrumentalness: <em>Array[float]</em></p></li>
+<li><p>speechiness: <em>Array[float]</em></p></li>
+<li><p>danceability: <em>Array[float]</em></p></li>
+<li><p>valence: <em>Array[float]</em></p></li>
+<li><p>energy: <em>Array[float]</em></p></li>
+<li><p>mood_id: <em>Integer</em></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
 <dt id="backend.mood.get_custom_mood">
 <code class="sig-prename descclassname"><span class="pre">backend.mood.</span></code><code class="sig-name descname"><span class="pre">get_custom_mood</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.mood.get_custom_mood" title="Permalink to this definition">¶</a></dt>
 <dd><p>Endpoint to get mood by mood name.</p>
@@ -111,13 +140,7 @@ All endpoints prefixed with <strong>/api/v1/mood</strong> are redirected to one 
 </ul>
 </div></blockquote>
 </li>
-<li><p>Response Body: <em>JSON</em> - list of moods, each containing</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>TODO</p></li>
-</ul>
-</div></blockquote>
-</li>
+<li><p>Response Body: <em>JSON</em> - list of moods, each containing mood_id, params, etc.</p></li>
 </ul>
 </dd></dl>
 
@@ -261,6 +284,25 @@ tracks to a Spotify playlist in the user’s library.</p>
 </div></blockquote>
 </li>
 <li><p>Response: <em>JSON</em> - object containing playlist information provided by Spotify</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="backend.spotify_facade.get_spotify_id">
+<code class="sig-prename descclassname"><span class="pre">backend.spotify_facade.</span></code><code class="sig-name descname"><span class="pre">get_spotify_id</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#backend.spotify_facade.get_spotify_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint to get Spotify ID of queried track/artist.</p>
+<ul>
+<li><p>URI path: /api/v1/spotify/search</p></li>
+<li><p>Methods: GET</p></li>
+<li><p>Required Query Params:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>query</strong>: <em>String</em> - terms to search for</p></li>
+<li><p><strong>type</strong>: <em>String</em> - artist or track</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Response: <em>JSON</em> - object containing information provided by Spotify</p></li>
 </ul>
 </dd></dl>
 
