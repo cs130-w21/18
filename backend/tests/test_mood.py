@@ -70,7 +70,7 @@ def test_create_mood_fail(client, app):
 #@pytest.mark.dependency(depends=['test_create_mood'])
 def test_update_mood(client, app):
 	MOOD_ENDPOINT, data, headers = get_data()
-	resp = client.put(MOOD_ENDPOINT, data=json.dumps({}), headers=headers)
+	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	data['danceability'] = [0.12, 0.37, 0.18]
 
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
@@ -90,7 +90,7 @@ def test_update_mood(client, app):
 #@pytest.mark.dependency(depends=['test_update_mood'])
 def test_get_mood(client, app):
 	MOOD_ENDPOINT, data, headers = get_data()
-	resp = client.put(MOOD_ENDPOINT, data=json.dumps({}), headers=headers)
+	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	data['danceability'] = [0.12, 0.37, 0.18]
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 
@@ -113,7 +113,7 @@ def test_get_mood(client, app):
 #@pytest.mark.dependency(depends=['test_get_mood'])
 def test_delete_mood(client, app):
 	MOOD_ENDPOINT, data, headers = get_data()
-	resp = client.put(MOOD_ENDPOINT, data=json.dumps({}), headers=headers)
+	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	data['danceability'] = [0.12, 0.37, 0.18]
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	json_resp = client.get(MOOD_ENDPOINT, headers=headers).json
@@ -139,7 +139,8 @@ def test_delete_mood(client, app):
 def test_get_explore_moods(client, app):
 	with DB() as db:
 		db.create_or_update_user('fake2', 'fake token')
-	test_delete_mood(client, app)
+	MOOD_ENDPOINT, data, headers = get_data()
+	json_resp = client.delete(MOOD_ENDPOINT, headers=headers).json
 	test_create_mood(client, app)
 
 	payload = {
@@ -160,4 +161,4 @@ def test_get_explore_moods(client, app):
 			mood = dict((k, j[k]) for k in j if k != 'mood_id' and k != 'creator_id' and k != 'mood_name')
 			assert(mood == data)
 
-	#test_delete_mood(client, app)
+	json_resp = client.delete(MOOD_ENDPOINT, headers=headers).json
