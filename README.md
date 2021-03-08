@@ -15,6 +15,15 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Pages auto-update as you edit the files.
 
+## Documentation
+
+To view Musaic Front-End Documentation, refer to the following:
+
+- [Front-End Documentation](https://github.com/cs130-w21/18/tree/fe/master/docs) - learn more about Musaic's API
+- To generate Front-End Documentation yourself after git cloning from branch fe/master, run `npm run docs`
+
+The Musaic User Manual is accessible [here](https://github.com/cs130-w21/18/wiki)
+
 ## About Next.js
 
 To learn more about Next.js, take a look at the following resources:
