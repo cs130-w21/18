@@ -22,7 +22,7 @@ fi
 #echo "Server running"
 #SERVER_PID=$!
 echo "Running Tests"
-pytest
+pytest -s
 PYTEST_EXIT_CODE=$?
 #kill $SERVER_PID
 deactivate
