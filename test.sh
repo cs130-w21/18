@@ -17,14 +17,14 @@ else
     echo "Activating existing Python venv"
     . "${ENV}/bin/activate"
 fi
-echo "Starting server"
-gunicorn main:app &
-echo "Server running"
-SERVER_PID=$!
+#echo "Starting server"
+#gunicorn main:app &
+#echo "Server running"
+#SERVER_PID=$!
 echo "Running Tests"
 pytest
 PYTEST_EXIT_CODE=$?
-kill $SERVER_PID
+#kill $SERVER_PID
 deactivate
 rm -rf $tmp_dir
 exit $PYTEST_EXIT_CODE
