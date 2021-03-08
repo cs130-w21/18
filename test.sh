@@ -23,6 +23,8 @@ echo "Server running"
 SERVER_PID=$!
 echo "Running Tests"
 pytest
+PYTEST_EXIT_CODE=$?
 kill $SERVER_PID
 deactivate
 rm -rf $tmp_dir
+exit $PYTEST_EXIT_CODE
