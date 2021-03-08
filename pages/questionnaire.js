@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Questionnaire from "../views/questionnaire";
 import { submitQuestionnaire } from "../lib/fetch";
+import { parseCookies } from "nookies";
 var _ = require("lodash");
 
 /**
@@ -36,9 +37,10 @@ const QuestionnaireController = (props) => {
   const submitResponses = async (responses) => {
     let moodName = responses.name;
     let paramResponses = _.omit(responses, ["name"]);
+    const { jwt } = parseCookies();
 
     try {
-      const response = await submitQuestionnaire(moodName, paramResponses);
+      const response = await submitQuestionnaire(jwt, moodName, paramResponses);
       if (response.error !== "") {
         throw response.error;
       }
