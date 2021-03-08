@@ -18,34 +18,26 @@ import {
 export async function getServerSideProps(context) {
   const cookies = parseCookies(context);
 
-  return (
-    <div>
-      {/* Todo: Pull this out into its own component so we can reuse it */}
-      <Head>
-        <title>Custom Mood-Based Playlists</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      {/* Todo: automatically redirect user if they're not logged in. */}
-      <Link href='/login'>
-        <Button>Log in</Button>
-      </Link>
-
-      <p>Hello!</p>
-      <Link href="/questionnaire">
-        <Button>
-          Generate your playlist!
-        </Button>
-      </Link>
-
-      <Link href="/explore">
-        <Button>
-          Explore
-        </Button>
-      </Link>
-    </div>
-  );
-};
+  let username = null,
+    jwt = null;
+  // If the user is coming from Spotify (username & jwt are in params), store their username and jwt in cookies.
+  if (context.query.username && context.query.jwt) {
+    // Don't update user if there's already one logged in.
+    if (
+      typeof cookies.username === "undefined" &&
+      typeof cookies.jwt === "undefined"
+    ) {
+      setCookie(context, "jwt", context.query.jwt);
+      setCookie(context, "username", context.query.username);
+    }
+    // This removes the parameters from the URL, because leaving them in causes issues.
+    return {
+      redirect: {
+        destination: "/",
+        permanent: true,
+      },
+    };
+  }
 
   // Otherwise, try to load username & jwt from cookies.
   username = cookies.username ?? null;
