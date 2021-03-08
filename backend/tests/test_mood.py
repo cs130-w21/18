@@ -93,7 +93,7 @@ def test_get_mood(client, app):
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	data['danceability'] = [0.12, 0.37, 0.18]
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
-
+	print("get_mood", json_resp)
 	json_resp = client.get(MOOD_ENDPOINT, headers=headers).json
 	assert("mood_id" in json_resp)
 
