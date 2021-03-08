@@ -1,8 +1,11 @@
+[![Build Status](https://travis-ci.com/cs130-w21/18.svg?branch=fe%2Fmaster)](https://travis-ci.com/cs130-w21/18)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Getting Started for Developers
 
-First, run the development server:
+To run the app locally, first make sure Node.js and npm are installed. Run `npm install` to install all the dependencies.
+Then run the development server:
 
 ```bash
 npm run dev
@@ -10,24 +13,30 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Pages auto-update as you edit the files.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Documentation
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+To view Musaic Front-End Documentation, refer to the following:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- [Front-End Documentation](https://github.com/cs130-w21/18/tree/fe/master/docs) - learn more about Musaic's API
+- To generate Front-End Documentation yourself after git cloning from branch fe/master, run `npm run docs`
 
 The Musaic User Manual is accessible [here](https://github.com/cs130-w21/18/wiki)
 
-## Learn More
+## About Next.js
 
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-To view Musaic Front-End Documentation, refer to the following:
+## CI/CD
 
-- [Front-End Documentation](https://github.com/cs130-w21/18/tree/fe/master/docs) - learn more about Musaic's API
-- To generate Front-End Documentation yourself after git cloning from branch fe/master, run `npm run docs`
+Musaic is automatically deployed to https://test-fe-130.herokuapp.com every time a commit is pushed to the branch fe/master that builds
+successfully and passes our automated tests. Any push to GitHub will trigger the Travis CI script, found in .travis.yml, which builds the production version of the app and runs all Jest tests.
+
+To manually trigger a build of the production version locally, you can use `npm run build`. To manually run the tests, use
+`npm run test`.
+
+You can manually trigger a build of the production frontend app and run our unit tests by visiting https://travis-ci.com/github/cs130-w21/18, selecting the most recent build of the branch fe/master, and clicking "Restart build."
