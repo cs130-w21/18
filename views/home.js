@@ -116,6 +116,8 @@ const Home = (props) => {
           loggedIn={props.loggedIn}
           loginFunction={props.loginFunction}
           logoutFunction={props.logoutFunction}
+          switchViewLink="/explore"
+          switchViewText="Explore Moods"
         />
         {props.error !== "" ? (
           <Alert
