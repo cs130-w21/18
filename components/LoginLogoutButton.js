@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/LoginLogoutButton.module.css";
+import styles from "../styles/MusaicHeader.module.css";
 import { Button } from "react-bootstrap";
 
 /**
@@ -19,7 +19,7 @@ const LoginLogoutButton = (props) => {
   if (props.loggedIn) {
     return (
       <Button
-        className={styles.loginlogoutbutton}
+        className={styles.headerbutton}
         variant="outline-dark"
         onClick={props.logoutFunction}
       >
@@ -29,7 +29,7 @@ const LoginLogoutButton = (props) => {
   }
   return (
     <Button
-      className={styles.loginlogoutbutton}
+      className={styles.headerbutton}
       variant="outline-primary"
       onClick={props.loginFunction}
     >
