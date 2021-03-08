@@ -95,6 +95,8 @@ def test_get_mood(client, app):
 	json_resp = client.put(MOOD_ENDPOINT, data=json.dumps(data), headers=headers).json
 	print("get_mood", json_resp)
 	json_resp = client.get(MOOD_ENDPOINT, headers=headers).json
+	print("get_mood", json_resp)
+	print("get mood", json_resp['mood_id'])
 	assert("mood_id" in json_resp)
 
 	mood_params = dict((k, json_resp[k]) for k in json_resp if k != 'mood_id')
