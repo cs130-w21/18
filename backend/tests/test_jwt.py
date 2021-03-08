@@ -1,5 +1,4 @@
 import sys
-print(sys.path)
 import json
 import flask
 import sys
